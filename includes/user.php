@@ -162,7 +162,7 @@
             $mail->AddAddress($email);
             $mail->Subject = EMAIL_VERIFICATION_SUBJECT;
 
-            $link = EMAIL_VERIFICATION_URL.'?id='.urlencode($user_id).'&pwreset_code='.urlencode($activation_hash);
+            $link = EMAIL_VERIFICATION_URL.'?id='.urlencode($user_id).'&verification_code='.urlencode($activation_hash);
             $mail->Body = EMAIL_VERIFICATION_CONTENT.' '.$link;
             
             if(!$mail->Send()) 
