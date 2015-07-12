@@ -10,7 +10,7 @@
                 <label>Surname: <input type="text" name="surname" value=""/></label>
                 <label>Name: <input type="text" name="name" value=""/></label>
                 <label>Matrikelnr.: <input type="text" name="matrnr" value=""/></label>
-                <label>Password: <input type="password" name="pw"  /></label>
+                <label>Password: <input type="password" name="pw"/></label>
                 <label>Repeat password: <input type="password" name="pw_repeat" value=""/></label>
                 <input type="submit" name="Register" value="Register" />
             </fieldset>

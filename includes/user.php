@@ -1,7 +1,7 @@
 <?php
-	include(dirname(__DIR__).'/config/config.php');
+	include_once(dirname(__DIR__).'/config/config.php');
 	include_once dirname(__FILE__).'/db.php';
-	include(dirname(__DIR__).'/libraries/PHPMailer.php');
+	include_once(dirname(__DIR__).'/libraries/PHPMailer.php');
 	class user
 	{
 		public function login($email, $pw)
@@ -486,12 +486,11 @@
 
 				try
 				{
-					$stmt = $db->prepare("SELECT id, email, name, surname, matrikelnr, active, role  FROM cip_user");
+					$stmt = $db->prepare("SELECT id, email, name, surname, matrikelnr, active, role  FROM cip_user ORDER BY surname");
 					$stmt->execute();
 					$db = null;
 					$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 					return $result;
-					$db = null;
 				}
 				catch (PDOException $e)
 				{

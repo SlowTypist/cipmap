@@ -5,7 +5,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && !isset($_GET["id"]))
 	echo "<b>Choose user:</b><br>";
 	foreach ($allusers as $key => $value) 
 	{
-		echo "<a href=adminedit.php?id=".$allusers[$key]['id'].">".$allusers[$key]['name']." ".$allusers[$key]['surname']."</a><br>";
+		echo "<a href=adminedit.php?id=".$allusers[$key]['id'].">".$allusers[$key]['surname']." ".$allusers[$key]['name']."</a><br>";
 	}
 }
 else if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET["id"]))

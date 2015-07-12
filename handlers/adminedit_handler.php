@@ -1,6 +1,5 @@
 <?php
 require_once(dirname(__DIR__).'/includes/user.php');
-require_once(dirname(__DIR__).'/includes/lecture.php');
 $changeresult = "";
 session_start();
 if (isset($_SESSION['LAST_ACTIVITY'])==0 || (time() - $_SESSION['LAST_ACTIVITY'] > 1800)) {
