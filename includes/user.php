@@ -72,7 +72,7 @@
             {
             	return -5;
             } 
-            elseif (strlen($email) > 64 || !filter_var($email, FILTER_VALIDATE_EMAIL) || !preg_match("/@uni-bonn.de/",$email)) 
+            elseif (strlen($email) > 64 || !filter_var($email, FILTER_VALIDATE_EMAIL) || !preg_match("/uni-bonn.de/",$email)) 
             {
            	 	return -6;
         	}
@@ -195,12 +195,12 @@
 							if($this->sendForgotEmail($result['id'], $email, $result["pwreset_hash"]))
 							{
 								$db = null;
-								return 0;
+								return 1;
 							}
 							else
 							{
 								$db = null;
-								return -3;
+								return -4;
 							}
 							var_dump($result);
 						}
@@ -245,7 +245,7 @@
             $mail->FromName = EMAIL_PASSWORDRESET_FROM_NAME;
             $mail->AddAddress($email);
             $mail->Subject = EMAIL_PASSWORDRESET_SUBJECT;
-
+            //$mail->SMTPDebug = 2;
             $link = EMAIL_PASSWORDRESET_URL.'?id='.urlencode($user_id).'&verification_code='.urlencode($pwreset_hash);
             $mail->Body = EMAIL_PASSWORDRESET_CONTENT.' '.$link;
             
@@ -256,6 +256,7 @@
             }
             else 
             {
+            	//var_dump($mail);
            		return true;
             }
 		}
@@ -301,7 +302,7 @@
 
 				try
 				{
-					$stmt = $db->prepare("SELECT name, surname, matrikelnr FROM cip_user WHERE 	id= :user_id");
+					$stmt = $db->prepare("SELECT email, name, surname, matrikelnr, active, role FROM cip_user WHERE 	id= :user_id");
 					$stmt->bindParam(':user_id', $user_id);
 					$stmt->execute();
 					$db = null;
@@ -477,8 +478,34 @@
 			}
 
 		}
+		public function listAllUsers()
+		{
+			$db = db_connect();
+			if ($db)
+			{
 
-	
+				try
+				{
+					$stmt = $db->prepare("SELECT id, email, name, surname, matrikelnr, active, role  FROM cip_user");
+					$stmt->execute();
+					$db = null;
+					$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+					return $result;
+					$db = null;
+				}
+				catch (PDOException $e)
+				{
+
+					$db = null;
+					return 0;		//db error
+				}
+			}
+			else
+			{
+				return 0;		//db error
+			}
+
+		}
 	}
 
 ?>

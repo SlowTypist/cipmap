@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 		$user = new user();
 
 		$result = $user->sendForgot($_POST['email']);
-		if ($result > -1)
+		if ($result == -1)
 		{
 			$forgotresult = "This email is not registered in the system";
 		}
@@ -26,9 +26,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 		{
 			$forgotresult = "Database issues";
 		}	
-		if ($result == -4)
+		if ($result == -2)
 		{
 			$forgotresult = "Your account is not activated yet";
+		}	
+		if ($result == -4)
+		{
+			$forgotresult = "SMTP error";
 		}	
 
 	}

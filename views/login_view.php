@@ -2,7 +2,7 @@
 <?php echo $loginerror?><br>
 <form method="post" action="login.php" name="loginform">
     <label for="Email:">E-mail:</label>
-    <input id="email" type="email" name="email" required />
+    <input id="email" type="email" name="email" value="@uni-bonn.de" required />
     <label for="Password">Password:</label>
     <input id="pw" type="password" name="pw" autocomplete="off" required />
        <input type="submit" name="login" value="Login" />

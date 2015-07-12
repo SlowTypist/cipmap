@@ -19,7 +19,7 @@ if ($_SESSION['loggedin'] == true)
 	}
 	if ($_SESSION['role'] == 3)
 	{
-		header('Location: admin.php');
+		header('Location: admin/admin.php');
 	}
 
 }
