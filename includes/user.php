@@ -118,8 +118,8 @@
 							}
 							else
 							{
-								$stmt_delete_user = $db->prepare("DELETE FROM cip_user WHERE id = :user_id");
-								$stmt_delete_user->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+								//$stmt_delete_user = $db->prepare("DELETE FROM cip_user WHERE id = :user_id");
+								//$stmt_delete_user->bindValue(':user_id', $user_id, PDO::PARAM_INT);
 								//$stmt_delete_user->execute();
 								$db = null;
 								return -7;
@@ -503,6 +503,59 @@
 			else
 			{
 				return 0;		//db error
+			}
+
+		}
+		public function changeUserInformation($user_id, $email,  $name, $surname, $matrnr, $active, $role)
+		// 0 - db error// 1 - success
+		{
+			$db = db_connect();
+			if ($db)
+			{
+				try
+				{
+					/*var_dump($user_id);
+					var_dump($email);
+					var_dump($name);
+					var_dump($surname);
+					var_dump($matrnr);
+					var_dump($active);
+					var_dump($role);*/
+					$stmt = $db->prepare ("UPDATE cip_user
+											SET email = :email, name = :name, surname = :surname, matrikelnr = :matrnr, active = :active, role = :role
+											WHERE id = :user_id");
+					$stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+					$stmt->bindValue(':email', $email, PDO::PARAM_STR);
+					$stmt->bindValue(':name', $name, PDO::PARAM_STR);
+					$stmt->bindValue(':surname', $surname, PDO::PARAM_STR);
+					$stmt->bindValue(':matrnr', $matrnr, PDO::PARAM_INT);
+					$stmt->bindValue(':active', $active, PDO::PARAM_INT);
+					$stmt->bindValue(':role', $role, PDO::PARAM_INT);
+					$stmt->execute();
+					if ($stmt)
+					{
+
+						$db = null;
+						return 1;
+					}
+					else 
+					{
+						$db = null;
+						return 0;
+					}
+
+
+				}
+				catch (PDOException $e)
+				{
+					$db = null;
+					return 0;
+				}
+
+			}
+			else
+			{
+				return 0;
 			}
 
 		}
