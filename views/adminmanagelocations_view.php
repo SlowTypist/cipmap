@@ -1,5 +1,6 @@
 <?php include('_header.php'); ?>
-<?php if (!isset($_GET["getid"]) && !isset($_GET['add']))
+<?php 
+if (!isset($_GET["getid"]) && !isset($_GET['add']))
 {
 	echo $deleteresult;
 	echo "<b>Choose location:</b><br>";
