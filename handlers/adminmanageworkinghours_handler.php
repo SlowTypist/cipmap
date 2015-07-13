@@ -19,7 +19,7 @@ if ($_SESSION['loggedin'] == true && $_SESSION['role'] == 3)
 		{
 			$admin = new admin();
 			$locationinfo = $admin->getLocationName($_GET["getid"]);
-
+			$workinghours = $admin->getWorkingHours($_GET["getid"]);
 		}
 		else
 		{

@@ -2,7 +2,7 @@
 <html lang = "de">
 <head>
     <meta charset="UTF-8">
-    <title>Geppeto </title> 
+    <title>Cherry</title> 
     <h1>Homework delivery system</h1>
     <style type="text/css">
         /* just for the demo */
