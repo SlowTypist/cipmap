@@ -11,11 +11,11 @@ if ($_SESSION['loggedin'] == true)
 	}
 	if ($_SESSION['role'] == 1)
 	{
-		header('Location: tutor1.php');
+		header('Location: tutor/tutor.php');
 	}
 	if ($_SESSION['role'] == 2)
 	{
-		header('Location: teacher1.php');
+		header('Location: teacher/teacher.php');
 	}
 	if ($_SESSION['role'] == 3)
 	{

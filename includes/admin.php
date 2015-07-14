@@ -142,7 +142,7 @@
 			{
 				try
 				{
-					$stmt = $db->prepare("SELECT name  FROM cip_location WHERE id = :id ORDER BY name");
+					$stmt = $db->prepare("SELECT name  FROM cip_location WHERE id = :id");
 					$stmt->bindValue(':id', $id, PDO::PARAM_INT);
 					$stmt->execute();
 					$db = null;
