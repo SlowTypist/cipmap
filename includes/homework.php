@@ -32,6 +32,37 @@
 			}
 
 		}
+		public function getHomeworkInfoNoSolution($homework_id)
+		{
+			$db = db_connect();
+			if ($db)
+			{
+
+				try
+				{
+					$stmt = $db->prepare("SELECT A.id as lecture_id, A.name as homework_name, A.lecture_id, start, end, max_points, link_task, B.name as lecture_name, B.teacher, B.max_group_size 
+											FROM cip_homework A, cip_lecture B 
+											WHERE A.id=:homework_id 
+											AND B.id = A.lecture_id");
+					$stmt->bindValue(':homework_id', $homework_id, PDO::PARAM_INT);
+					$stmt->execute();
+					$homeworkinfo = $stmt->fetch(PDO::FETCH_ASSOC);
+
+					return $homeworkinfo;
+				}
+				catch (PDOException $e)
+				{
+
+					$db = null;
+					return 0;		//db error
+				}
+			}
+			else
+			{
+				return 0;		//db error
+			}
+
+		}
 		public function getHomeworkLocations($homework_id)
 		{
 			$db = db_connect();
@@ -39,7 +70,7 @@
 			{
 				try
 				{
-					$stmt = $db->prepare("SELECT location_id FROM cip_homework_locations WHERE homework_id=:homework_id");
+					$stmt = $db->prepare("SELECT A.location_id, B.name FROM cip_homework_locations A, cip_location B WHERE A.homework_id=:homework_id AND B.id=A.location_id");
 					$stmt->bindValue(':homework_id', $homework_id, PDO::PARAM_INT);
 					$stmt->execute();
 					$homeworklocation = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -66,7 +97,7 @@
 
 				try
 				{
-					$stmt = $db->prepare("SELECT id, name FROM cip_homework WHERE lecture_id=:lecture_id ORDER BY id");
+					$stmt = $db->prepare("SELECT id, name, start, end, max_points, (link_task != '') AS task_exists FROM cip_homework WHERE lecture_id=:lecture_id ORDER BY id");
 					$stmt->bindValue(':lecture_id', $lecture_id, PDO::PARAM_INT);
 					$stmt->execute();
 					$db = null;
@@ -273,6 +304,90 @@
 			{
 				return 0;
 			}
+		}
+		public function getTaskLink($homework_id)
+		{
+			$db = db_connect();
+			if ($db)
+			{
+				try
+				{ 
+					$stmt = $db->prepare("SELECT link_task FROM cip_homework WHERE id=:homework_id");
+					$stmt->bindValue(':homework_id', $homework_id, PDO::PARAM_INT);
+					$stmt->execute();
+					$result = $stmt->fetch(PDO::FETCH_ASSOC);
+					if ($stmt)
+					{
+						if (isset($result))
+						{
+							return $result;
+						}
+						else 
+						{
+							return 0;
+						}
+
+					}
+					else 
+					{
+						return -1;
+					}
+
+				}
+				catch (PDOException $e)
+				{
+					$db = null;
+					return -1;
+				}
+
+			}
+			else
+			{
+				return -1;
+			}
+
+		}
+		public function allPoints($lecture_id)
+		{
+			$db = db_connect();
+			if ($db)
+			{
+				try
+				{ 
+					$stmt = $db->prepare("SELECT SUM(max_points) FROM cip_homework WHERE lecture_id=:lecture_id");
+					$stmt->bindValue(':lecture_id', $lecture_id, PDO::PARAM_INT);
+					$stmt->execute();
+					$result = $stmt->fetch(PDO::FETCH_ASSOC)["SUM(max_points)"];
+					if ($stmt)
+					{
+						if (isset($result))
+						{
+							return $result;
+						}
+						else 
+						{
+							return 0;
+						}
+
+					}
+					else 
+					{
+						return -1;
+					}
+
+				}
+				catch (PDOException $e)
+				{
+					$db = null;
+					return -1;
+				}
+
+			}
+			else
+			{
+				return -1;
+			}
+
 		}
 
 	}
