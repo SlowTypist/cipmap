@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang = "de">
-<head profile="http://www.w3.org/2005/10/profile">
-
+<head>
     <meta charset="UTF-8">
     <title>Cherry</title> 
     <h1>Homework delivery system</h1>
@@ -29,8 +28,31 @@
         }
     </style>
     <link rel="icon" 
-      type="image/png" 
-      href="http://localhost/cipmap/views/ico.png">
+    type="image/png" 
+    href="http://localhost/cipmap/views/ico.png">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script>
+        $(function() {
+        $( "#fromDate" ).datepicker
+        (
+        { 
+            dateFormat: 'yy-mm-dd',
+             onSelect: function( selectedDate ) {
+            $( "#toDate" ).datepicker( "option", "minDate", selectedDate );}
+        }
+        );
+        $( "#toDate" ).datepicker
+        (
+        { 
+            dateFormat: 'yy-mm-dd',
+            onSelect: function( selectedDate ) {
+            $( "#fromDate" ).datepicker( "option", "maxDate", selectedDate );}
+        }
+        );
+        });
+    </script>
 </head>
 <body>
 

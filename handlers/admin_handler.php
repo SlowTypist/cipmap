@@ -8,6 +8,7 @@ if (isset($_SESSION['LAST_ACTIVITY'])==0 || (time() - $_SESSION['LAST_ACTIVITY']
     // last request was more than 30 minutes ago
     $_SESSION = array();    // unset $_SESSION variable for the run-time 
     session_destroy();   // destroy session data in storage
+    header('Location: ../login.php');
 }
 else
 {

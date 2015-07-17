@@ -4,6 +4,60 @@
 	include_once(dirname(__DIR__).'/libraries/PHPMailer.php');
 	class homework
 	{
+		public function getHomeworkInfo($homework_id)
+		{
+			$db = db_connect();
+			if ($db)
+			{
+
+				try
+				{
+					$stmt = $db->prepare("SELECT id, name, lecture_id, start, end, max_points, link_task, link_solution FROM cip_homework WHERE id=:homework_id");
+					$stmt->bindValue(':homework_id', $homework_id, PDO::PARAM_INT);
+					$stmt->execute();
+					$homeworkinfo = $stmt->fetch(PDO::FETCH_ASSOC);
+
+					return $homeworkinfo;
+				}
+				catch (PDOException $e)
+				{
+
+					$db = null;
+					return 0;		//db error
+				}
+			}
+			else
+			{
+				return 0;		//db error
+			}
+
+		}
+		public function getHomeworkLocations($homework_id)
+		{
+			$db = db_connect();
+			if ($db)
+			{
+				try
+				{
+					$stmt = $db->prepare("SELECT location_id FROM cip_homework_locations WHERE homework_id=:homework_id");
+					$stmt->bindValue(':homework_id', $homework_id, PDO::PARAM_INT);
+					$stmt->execute();
+					$homeworklocation = $stmt->fetchAll(PDO::FETCH_ASSOC);
+					return $homeworklocation;
+				}
+				catch (PDOException $e)
+				{
+
+					$db = null;
+					return 0;		//db error
+				}
+			}
+			else
+			{
+				return 0;		//db error
+			}
+
+		}
 		public function listAllHomeworks($lecture_id)
 		{
 			$db = db_connect();
@@ -103,6 +157,116 @@
 					return 0;
 				}
 
+
+			}
+			else
+			{
+				return 0;
+			}
+		}
+		public function deleteHomeworkLocations($homework_id)
+		{
+			$db = db_connect();
+			if($db)
+			{
+				try
+				{
+					$stmt = $db->prepare("DELETE FROM cip_homework_locations WHERE homework_id = :homework_id");
+					$stmt->bindValue(':homework_id', $homework_id, PDO::PARAM_INT);
+					$stmt->execute();
+					if ($stmt)
+					{
+						return $db->lastInsertId();
+					}
+					else
+					{
+						return 0;
+					}
+
+				}
+				catch (PDOException $e)
+				{
+					var_dump($e);
+					$db = null;
+					return 0;
+
+				}
+
+			}
+			else
+			{
+				return 0;
+			}
+		}
+		public function editHomework($id, $name, $start, $end, $max_points, $link_task, $link_solution)
+		{
+			$db = db_connect();
+			if ($db)
+			{
+				try
+				{
+					$stmt = $db->prepare("UPDATE cip_homework SET name = :name, start = :start, end = :end, max_points = :max_points, link_task = :link_task, link_solution = :link_solution WHERE id = :id");
+					$stmt->bindValue(':name', $name, PDO::PARAM_STR);
+					$stmt->bindValue(':start', $start, PDO::PARAM_STR);
+					$stmt->bindValue(':end', $end, PDO::PARAM_STR);
+					$stmt->bindValue(':max_points', $max_points, PDO::PARAM_INT);
+					$stmt->bindValue(':link_task', $link_task, PDO::PARAM_STR);
+					$stmt->bindValue(':link_solution', $link_solution, PDO::PARAM_STR);
+					$stmt->bindValue('id', $id, PDO::PARAM_INT);
+					$stmt->execute();
+					if ($stmt)
+					{
+						return 1;
+					}
+					else
+					{
+						return 0;
+					}
+
+				}
+				catch (PDOException $e)
+				{
+					var_dump($e);
+					$db = null;
+					return 0;
+				}
+			}
+			else
+			{
+				return 0;
+			}
+
+		}
+		public function deleteHomework($homework_id)
+		{
+			$db = db_connect();
+			if ($db)
+			{
+				try
+				{ 
+					$stmt = $db->prepare("SELECT lecture_id FROM cip_homework WHERE id=:homework_id");
+					$stmt->bindValue(':homework_id', $homework_id, PDO::PARAM_INT);
+					$stmt->execute();
+					$lecture_id = $stmt->fetch(PDO::FETCH_ASSOC)["lecture_id"];
+					$stmt = $db->prepare("DELETE FROM cip_homework WHERE id=:homework_id; DELETE FROM cip_homework_locations WHERE homework_id=:homework_id; DELETE FROM cip_appointment WHERE homework_id = :homework_id");
+					$stmt->bindValue(':homework_id', $homework_id, PDO::PARAM_INT);
+					$stmt->execute();
+					if ($stmt)
+					{
+						return $lecture_id;
+					}
+					else 
+					{
+						return 0;
+					}
+
+				}
+				catch (PDOException $e)
+				{
+					var_dump($e);
+					$db = null;
+					return 0;
+				}
 
 			}
 			else
