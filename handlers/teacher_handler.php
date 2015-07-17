@@ -2,6 +2,7 @@
 require_once(dirname(__DIR__).'/includes/user.php');
 require_once(dirname(__DIR__).'/includes/lecture.php');
 $error = "";
+$deletemessage = "";
 session_start();
 if (isset($_SESSION['LAST_ACTIVITY'])==0 || (time() - $_SESSION['LAST_ACTIVITY'] > 1800)) {
     // last request was more than 30 minutes ago
@@ -18,6 +19,20 @@ if ($_SESSION['loggedin'] == true && ($_SESSION['role'] == 3 || $_SESSION['role'
 	$user = new user();
 	$userinfo = $user->getUserInformation($_SESSION['user']);
 	$lecture = new lecture();
+
+	if (isset($_GET["deleteid"]))
+	{
+		$deleteresult = $lecture->deleteLecture($_GET["deleteid"]);
+		if ($deleteresult)
+		{
+			$deletemessage = "Lecture successfully deleted";
+		}
+		else 
+		{
+			$deletemessage = "Error";
+		}
+
+	}
 	$alllectures = $lecture->listAlllectures();
 }
 else

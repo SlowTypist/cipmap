@@ -275,6 +275,20 @@ if ($_SESSION['loggedin'] == true && $_SESSION['role'] >= 2)
 				$changeresult = "Task successfully changed";
 			}
 		}
+		if (isset($_POST['Change_lecture']))
+		{
+			$lecture = new lecture();
+			$lectureChangeResult = $lecture->editLecture($_POST["lecture_id"],$_POST["name"], $_POST["teacher"], $_POST["max_group_size"] );
+			if ($lectureChangeResult)
+			{
+				$changeresult = "Lecture info successfully changed";
+			}
+			else 
+			{
+				$changeresult = "Error";
+			}
+
+		}
 	}
 }
 ?>

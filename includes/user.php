@@ -513,13 +513,6 @@
 			{
 				try
 				{
-					/*var_dump($user_id);
-					var_dump($email);
-					var_dump($name);
-					var_dump($surname);
-					var_dump($matrnr);
-					var_dump($active);
-					var_dump($role);*/
 					$stmt = $db->prepare ("UPDATE cip_user
 											SET email = :email, name = :name, surname = :surname, matrikelnr = :matrnr, active = :active, role = :role
 											WHERE id = :user_id");

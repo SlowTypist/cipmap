@@ -95,6 +95,73 @@
 				return 0;
 			}
 		}
+		public function editLecture($id, $name, $teacher, $max_group_size)
+		{
+			$db = db_connect();
+			if ($db)
+			{
+				try
+				{
+					$stmt= $db->prepare("UPDATE cip_lecture SET name = :name, teacher = :teacher, max_group_size = :max_group_size WHERE id = :id");
+					$stmt->bindValue(':name', $name, PDO::PARAM_STR);
+					$stmt->bindValue(':teacher', $teacher, PDO::PARAM_STR);
+					$stmt->bindValue(':max_group_size', $max_group_size, PDO::PARAM_INT);
+					$stmt->bindValue(':id', $id, PDO::PARAM_INT);
+					$stmt->execute();
+					if ($stmt)
+					{
+						return 1;
+					}
+					else 
+					{
+						return 0;
+					}
+
+				}
+				catch (PDOException $e)
+				{
+					$db = null;
+					return 0;
+				}
+
+			}
+			else
+			{
+				return 0;
+			}
+		}
+		public function deleteLecture($id)
+		{
+						$db = db_connect();
+			if ($db)
+			{
+				try
+				{
+					$stmt= $db->prepare("DELETE FROM cip_lecture WHERE id = :id");
+					$stmt->bindValue(':id', $id, PDO::PARAM_INT);
+					$stmt->execute();
+					if ($stmt)
+					{
+						return 1;
+					}
+					else 
+					{
+						return 0;
+					}
+
+				}
+				catch (PDOException $e)
+				{
+					$db = null;
+					return 0;
+				}
+
+			}
+			else
+			{
+				return 0;
+			}
+		}
 
 	}
 

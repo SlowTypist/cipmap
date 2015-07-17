@@ -1,6 +1,6 @@
 <?php include('_header_lectureedit.php'); ?>
 <?php 
-if (isset($_GET["getid"]) || isset($_GET['add']) || isset($_GET['homework_id']))
+if (isset($_GET['add']) || isset($_GET['homework_id']))
 {
 	echo "<b>Lecture: </b>".$lectureinfo[0]['name']."<b> Teacher: </b>".$lectureinfo[0]['teacher']."<br><b>Maximum group size:</b>".$lectureinfo[0]['max_group_size'];
 	echo "<br><b>Homeworks:</b><br>";
@@ -13,6 +13,27 @@ if (isset($_GET["getid"]) || isset($_GET['add']) || isset($_GET['homework_id']))
 	{
 		echo "<br><a href=lectureedit.php?add=".$_GET["getid"].">Add new homework</a>";
 	}
+}
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['getid']))
+{?>
+        <form action="lectureedit.php" method="post" enctype="multipart/form-data">         
+            <fieldset>
+                <legend>Change lecture information</legend>
+                <input type="hidden" name="lecture_id" value="<?php echo $_GET['getid'] ?>">
+                <label>Name: <input type="text" name="name" value="<?php echo $lectureinfo[0]['name'] ?>" required></label>
+                <label>Teacher: <input type="text" name="teacher" value="<?php echo $lectureinfo[0]['teacher'] ?>" ></label>
+                <label>Max Group Size:<br> <input type="number" name="max_group_size" value="<?php echo $lectureinfo[0]['max_group_size'] ?>" min = "1"required></label><br>
+                <input type="submit" name="Change_lecture" value="Change lecture information" />
+            </fieldset>
+        </form>
+        <?php
+        foreach ($allhomeworks as $key => $value) 
+        {
+             echo "<a href=lectureedit.php?homework_id=".$allhomeworks[$key]['id'].">".$allhomeworks[$key]['name']."</a>  
+                <a href=\"lectureedit.php?deleteid=".$allhomeworks[$key]['id']."\"onclick=\"return confirm('Do you really want to delete ".$allhomeworks[$key]['name']."? It might be better to edit existing information.')\"".">Delete ".$allhomeworks[$key]['name']."</a>   <br>";
+         }
+        echo "<br><a href=lectureedit.php?add=".$_GET["getid"].">Add new homework</a>";
+
 }
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['add']))
 {?>
@@ -36,6 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['add']))
                 <input type="submit" name="Add" value="Add new homework" />
             </fieldset>
         </form>
+        <br><a href=lectureedit.php?getid=<?php echo $_GET['add'];?>>Cancel</a>
 <?php 
 }
 else if($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['homework_id']))
