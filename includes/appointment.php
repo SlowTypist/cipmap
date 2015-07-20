@@ -77,6 +77,43 @@ class appointment
 			return 0;		//db error
 		}
 	}
+	public function addAppointment($time, $user_id, $homework_id, $location_id)
+	{
+		$db = db_connect();
+		if ($db)
+		{
+
+			try
+			{
+				$stmt = $db->prepare("INSERT INTO cip_appointment(time, user_id, homework_id, location_id) VALUES (:time, :user_id, :homework_id, :location_id)");
+				$stmt->bindValue(':time', $time, PDO::PARAM_STR);
+				$stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+				$stmt->bindValue(':homework_id', $homework_id, PDO::PARAM_INT);
+				$stmt->bindValue(':location_id', $location_id, PDO::PARAM_INT);
+				$stmt->execute();
+				$appointment_id =$db->lastInsertId();
+				if ($stmt)
+				{
+					return $appointment_id;
+				}
+				else
+				{
+					return 0;
+				}
+			}
+
+			catch (PDOException $e)
+			{
+				$db = null;
+				return 0;		//db error
+			}
+		}
+		else
+		{
+			return 0;		//db error
+		}
+
+	}
 	public function deleteAppointment($appointment_id)
 	{
 		$db = db_connect();

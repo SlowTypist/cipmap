@@ -30,7 +30,7 @@
     </style>
     <link rel="icon" 
       type="image/png" 
-      href="http://localhost/cipmap/views/ico.png">
+      href="http://www3.uni-bonn.de/favicon.ico">
 </head>
 <body>
 

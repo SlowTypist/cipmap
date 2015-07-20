@@ -12,39 +12,109 @@ if (isset($_GET['h']) && $appointmentinfo != -1)
 		echo "0";
 	}
 	echo " out of ".$appointmentinfo["max_points"];
-	echo "<br><b>Your appointment: </b>".date("D d M Y H:i", strtotime($appointmentinfo["time"]))." at ".$appointmentinfo["location_name"];
-	?><form action="appointment_info.php" method="post">
+	echo "<br><b>Your appointment: </b>".date("D d M Y H:i", strtotime($appointmentinfo["time"]))." at ".$appointmentinfo["location_name"]."";
+	?><br><form action="appointment_info.php" method="post">
 		<input type="hidden" name="homework_id" value="<?php echo $_GET['h'] ?>">
 		<input type="submit" name="deleteAppointment" value="Cancel appointment" /></form><?php
+	echo "<a href=lecture_info.php?id=".$appointmentinfo["lecture_id"].">Back to lecture</a><br>";
 	
 }
-else if ($appointmentinfo == -1)
+else if ($appointmentinfo == -1 || isset($_POST['loc']))
 {
 	echo "<b>Lecture: </b>".$homeworkinfo['lecture_name']."<b> Teacher: </b>".$homeworkinfo['teacher']."<br><b>Maximum group size: </b>".$homeworkinfo['max_group_size'];
-	echo "<br><b>Homework name: </b>".$homeworkinfo["homework_name"]." <b>Start date: </b>".date("d M Y", strtotime($homeworkinfo["start"]))." <b>End date:</b>".date("d M Y", strtotime($homeworkinfo["end"]));
-	if (!isset($_GET['loc']))
+	echo "<br><b>Homework name: </b>".$homeworkinfo["homework_name"]." <b>Start date: </b>".date("d M Y", strtotime($homeworkinfo["start"]))." <b>End date: </b>".date("d M Y", strtotime($homeworkinfo["end"]));
+	if (!isset($_POST['loc']))
 	{
 		echo "<br><br><b>Choose location:</b><br>";
-		foreach ($homeworklocations as $key => $value) 
+		?><form action ="appointment_info.php" method="post">
+		<input type="hidden" name="h" value="<?php echo $_GET['h'] ?>">
+		<table border="1">
+		<?php
+		foreach ($homeworklocations as $key => $value)
 		{
-			echo "<a href=appointment_info.php?h=".$_GET["h"]."&loc=".$homeworklocations[$key]["location_id"].">".$homeworklocations[$key]["name"]."</a><br>";
+			echo "<tr><td>".$homeworklocations[$key]["name"]."</td><td><input type='radio' name='loc' value=".$homeworklocations[$key]["location_id"]." required></td></tr>";
 		}
+		?>
+		</table><input type="submit" name="chosenLocation" value="Choose day"></form>
+		<?php
 	}
 	else
 	{
-		if (!isset($_GET["day"]))
+		echo "<br><br><b>Location: </b>";
+		foreach ($homeworklocations as $key => $value) 
+		{
+			if ($homeworklocations[$key]["location_id"] == $_POST['loc'])
+			{
+				echo $homeworklocations[$key]["name"];
+			}
+		}
+		if (!isset($_POST["day"]))
 		{ 
-			echo "<br><br><b>Choose day:</b><br>";
-			$iterday = $homeworkinfo["start"];
+
+			echo "<br><b>Choose day:</b><br>";
+			$iterday = $homeworkinfo["start"];?>
+			<form action ="appointment_info.php" method="post">
+			<input type="hidden" name="h" value="<?php echo $_POST['h'] ?>">
+			<input type="hidden" name="loc" value="<?php echo $_POST['loc'] ?>">
+			<table border="1">
+			<?php
 			while (strtotime($iterday) <= strtotime($homeworkinfo["end"])) 
 			{
 				if(date ("D", strtotime($iterday)) != "Sat" && date ("D", strtotime($iterday)) != "Sun" )
 				{
- 					echo date ("D d M Y", strtotime($iterday))."<br>";
+					echo "<tr><td>".date ("D d M Y", strtotime($iterday))."</td><td><input type='radio' name='day' value=".date ("Y-m-d", strtotime($iterday))." required></td></tr>";
  				}
  				$iterday = date ("Y-m-d", strtotime("+1 day", strtotime($iterday)));
- 			}
- 			echo "<br><a href=appointment_info.php?h=".$_GET["h"].">Back to locations</a><br>";
+ 			}?>
+ 			</table><input type="submit" name="chosenDay" value="Choose timeslot"></form>
+ 			<?php
+ 			echo "<a href=appointment_info.php?h=".$_POST["h"].">Back to start</a><br>";
+		}
+		else
+		{
+			echo "<br><b>Day: </b>".date("D d M Y", strtotime($_POST["day"]));
+			if (!isset($_POST["t"]))
+			{
+				echo "<br><b>Choose time:</b><br>";
+				?>
+				<form action ="appointment_info.php" method="post">
+				<input type="hidden" name="h" value="<?php echo $_POST['h'] ?>">
+				<input type="hidden" name="loc" value="<?php echo $_POST['loc'] ?>">
+				<input type="hidden" name="day" value="<?php echo $_POST['day'] ?>">
+				<table border="1">
+				<?php
+				foreach ($workingHoursOnDay as $key => $value) {
+					$itertime = $workingHoursOnDay[$key]["open_time"];
+					while (strtotime($itertime) < strtotime($workingHoursOnDay[$key]["close_time"]))
+					{
+						echo "<tr><td>".date("H:i:s", strtotime('+20 minutes', strtotime($itertime)))."</td><td><input type='radio' name='t' value=".date("H:i:s", strtotime('+20 minutes', strtotime($itertime)))." required></td></tr>";
+						echo "<tr><td>".date("H:i:s", strtotime('+40 minutes', strtotime($itertime)))."</td><td><input type='radio' name='t' value=".date("H:i:s", strtotime('+40 minutes', strtotime($itertime)))." required></td></tr>";
+						$itertime = date ("H:i", strtotime('+60 minutes', strtotime($itertime)));
+					}
+				}
+				?>
+				</table><input type="submit" name="chosenTime" value="Continue"></form>
+				<?php
+			}
+			else
+			{
+				echo "<br><b>Timeslot:</b>";
+				echo $_POST["t"];
+				if (!isset($_POST["confirmed"])):
+				?>
+				<form action ="appointment_info.php" method="post">
+				<input type="hidden" name="h" value="<?php echo $_POST['h'] ?>">
+				<input type="hidden" name="loc" value="<?php echo $_POST['loc'] ?>">
+				<input type="hidden" name="day" value="<?php echo $_POST['day'] ?>">
+				<input type="hidden" name="t" value="<?php echo $_POST['t'] ?>">
+				<input type="submit" name="confirmed" value="Confirm your appointment">
+				</form>
+				<?php
+				else:
+					echo "<br>".$addmessage;
+				endif;
+			}
+			echo "<br><a href=appointment_info.php?h=".$_POST["h"].">Back to homework</a><br>";
 		}
 
 	}

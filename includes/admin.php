@@ -237,23 +237,23 @@
 						$stmt->bindValue(':closed', $currentClosed, PDO::PARAM_STR);
 						if((intval($boxes[$i-1]/13)) == 0)
 						{
-							$stmt->bindValue(':day', 'MONDAY', PDO::PARAM_STR);
+							$stmt->bindValue(':day', '1', PDO::PARAM_STR);
 						}
 						else if((intval($boxes[$i-1]/13)) == 1)
 						{
-							$stmt->bindValue(':day', 'TUESDAY', PDO::PARAM_STR);							
+							$stmt->bindValue(':day', '2', PDO::PARAM_STR);							
 						}
 						else if((intval($boxes[$i-1]/13)) == 2)
 						{
-							$stmt->bindValue(':day', 'WEDNESDAY', PDO::PARAM_STR);							
+							$stmt->bindValue(':day', '3', PDO::PARAM_STR);							
 						}
 						else if((intval($boxes[$i-1]/13)) == 3)
 						{
-							$stmt->bindValue(':day', 'THURSDAY', PDO::PARAM_STR);							
+							$stmt->bindValue(':day', '4', PDO::PARAM_STR);							
 						}
 						else if((intval($boxes[$i-1]/13)) == 4)
 						{
-							$stmt->bindValue(':day', 'FRIDAY', PDO::PARAM_STR);							
+							$stmt->bindValue(':day', '5', PDO::PARAM_STR);							
 						}												
 						$stmt->execute();
 					}
