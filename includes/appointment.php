@@ -4,6 +4,104 @@ include_once dirname(__FILE__).'/db.php';
 include_once(dirname(__DIR__).'/libraries/PHPMailer.php');
 class appointment
 {
+	public function isTimeslotOpen($location_id, $day, $time)
+	{
+		$db = db_connect();
+		if ($db)
+		{
+			try
+			{
+				$timestamp = $day." ".$time;
+				$stmt = $db->prepare("SELECT COUNT(DISTINCT time, location_id) AS taken
+										FROM cip_appointment 
+										WHERE location_id = :location_id 
+										AND time = :time");
+				$stmt->bindValue(':time', $timestamp, PDO::PARAM_STR);
+				$stmt->bindValue(':location_id', $location_id, PDO::PARAM_INT);
+				$stmt->execute();
+				$res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+				if ($res[0]["taken"] == 0)
+				{
+					return 1;
+				}
+				else
+				{
+					return 0;
+				}
+			}
+			catch (PDOException $e)
+			{
+				$db = null;
+				return 0;
+			}
+
+		}
+		else 
+		{
+			return 0;
+		}
+	}
+	public function countFreeSlotOnLocationBetweenDates($location_id, $start, $end)
+	{
+		$db = db_connect();
+		if ($db)
+		{
+			try
+			{
+				$freeSlots = 0;										//first we count all available slots, then we count slots already taken and subtract
+				if ($start >= date ('Y-m-d', time()))				//if we count before start, then we count for all days, else we count starting from today
+				{
+					$iterday = $start;
+				}
+				else 
+				{
+					$iterday = date ('Y-m-d', time());
+				}
+				$stmt = $db->prepare("SELECT open_time, close_time FROM cip_working_hours WHERE location_id = :location_id AND day = :day");
+				$stmt->bindParam(':location_id', $location_id);
+				while (strtotime($iterday) <= strtotime($end)) //count all hours on each day and add them together
+				{
+					if(date ("N", strtotime($iterday)) != "6" && date ("N", strtotime($iterday)) != "7" )
+					{
+
+						$stmt->bindValue(':day', date ('N', strtotime($iterday)), PDO::PARAM_STR);
+						$stmt->execute();
+						$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+						foreach ($result as $key => $value) 
+						{
+							$freeSlots += ($result[$key]["close_time"]-$result[$key]["open_time"]);
+						}
+ 					}
+ 					$iterday = date ("Y-m-d", strtotime("+1 day", strtotime($iterday)));
+ 				}
+ 				$freeSlots *= 2;						// on each hour there are 2 slots
+ 				$start = date ("Y-m-d H:i:s", strtotime($start));												//reformat our parameters so that they could be compared with timestamps
+ 				$end = date ("Y-m-d H:i:s", strtotime("+23 hours 59 minutes 59 seconds", strtotime($end)));
+ 				$stmt = $db->prepare("SELECT COUNT( DISTINCT time, location_id ) AS takenslots
+										FROM cip_appointment
+										WHERE location_id = :location_id
+										AND time >= :start
+										AND time <= :end");
+ 				$stmt->bindValue(':location_id', $location_id, PDO::PARAM_INT);
+ 				$stmt->bindValue(':start', $start, PDO::PARAM_STR);
+ 				$stmt->bindValue(':end', $end, PDO::PARAM_STR);
+ 				$stmt->execute();
+ 				$res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+ 				$freeSlots -= $res[0]["takenslots"];						// freeslots = all slots minus those already taken
+				return $freeSlots;
+			}
+			catch (PDOException $e)
+			{
+				$db = null;
+				return 0;
+			}
+
+		}
+		else 
+		{
+			return 0;
+		}
+	}
 	public function allUserLectureAppointments($user_id, $lecture_id)
 	{
 		$db = db_connect();

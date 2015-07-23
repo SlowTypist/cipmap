@@ -17,7 +17,6 @@ else
 {
 		$_SESSION['LAST_ACTIVITY'] = time();
 }
-
 if ($_SESSION['loggedin'] == true)
 {
 	if ($_SERVER['REQUEST_METHOD'] == 'GET')
@@ -32,7 +31,10 @@ if ($_SESSION['loggedin'] == true)
 			{
 				$homeworkinfo = $homework->getHomeworkInfoNoSolution($_GET["h"]);
 				$homeworklocations = $homework->getHomeworkLocations($_GET["h"]);
-
+				foreach ($homeworklocations as $key => $value)
+				{
+					$homeworklocations[$key]["freeslots"]=$appointment->countFreeSlotOnLocationBetweenDates($value["location_id"],$homeworkinfo["start"], $homeworkinfo["end"]);
+				}
 			}
 		}
 		else
@@ -44,26 +46,46 @@ if ($_SESSION['loggedin'] == true)
 	{
 		if (!isset($_POST["deleteAppointment"]))						///work for different sequential pages, when you choose timeslot
 		{
-			var_dump($_POST);
 			$appointment = new appointment();
 			$homework = new homework();
 			$location = new location();
 			$homeworkinfo = $homework->getHomeworkInfoNoSolution($_POST["h"]);
 			$homeworklocations = $homework->getHomeworkLocations($_POST["h"]);
-			if (isset($_POST['day']) && $homeworkinfo )
+			if (isset($_POST['day']))
 			{
 				$workingHoursOnDay = $location->getWorkingHoursOnDay($_POST["loc"], date('N', strtotime($_POST["day"])));
-				if 	(isset($_POST["confirmed"]))	//multiple checks go further
+				if (!isset($_POST["confirmed"]))
 				{
-					foreach ($homeworklocations as $key => $value) {
-						if ($homeworklocations[$key]["location_id"] == $_POST["loc"])
+					$availableTimeslots = array();
+					foreach ($workingHoursOnDay as $key => $value) {
+						$itertime = $value["open_time"];
+						while (strtotime($itertime) < strtotime($workingHoursOnDay[$key]["close_time"]))
 						{
-							if ($_POST["day"] >= $homeworkinfo["start"] && $_POST["day"] <= $homeworkinfo["end"])
+							if ($appointment->isTimeslotOpen($_POST["loc"], $_POST["day"], date("H:i:s", strtotime('+20 minutes', strtotime($itertime))) ))
 							{
-								foreach ($workingHoursOnDay as $key => $value) {
-									if ($_POST["t"] > $workingHoursOnDay[$key]["open_time"] && $_POST["t"] < $workingHoursOnDay[$key]["close_time"])
+								array_push($availableTimeslots, date("H:i:s", strtotime('+20 minutes', strtotime($itertime))));	
+							}
+							if ($appointment->isTimeslotOpen($_POST["loc"], $_POST["day"], date("H:i:s", strtotime('+40 minutes', strtotime($itertime))) ))
+							{
+								array_push($availableTimeslots, date("H:i:s", strtotime('+40 minutes', strtotime($itertime))));	
+							}
+							$itertime = date ("H:i", strtotime('+60 minutes', strtotime($itertime)));
+						}
+					}
+				}
+				else	//multiple checks go further
+				{
+					foreach ($homeworklocations as $key1 => $value1) {
+						if ($value1["location_id"] == $_POST["loc"])							// is location right?
+						{
+							if ($_POST["day"] >= $homeworkinfo["start"] && $_POST["day"] <= $homeworkinfo["end"])	// is the day between the legal borders?
+							{
+								foreach ($workingHoursOnDay as $key2 => $value2) {
+									if ($_POST["t"] > $value2["open_time"] && $_POST["t"] < $value2["close_time"])	// is time set on working hours?
 									{
-										if ((date('i', strtotime($_POST["t"])) == "20" || date('i', strtotime($_POST["t"])) == "40") && date('s', strtotime($_POST["t"])) == "00")
+										if ((date('i', strtotime($_POST["t"])) == "20" || date('i', strtotime($_POST["t"])) == "40")					// is minute set to 20 or 40?
+											&& date('s', strtotime($_POST["t"])) == "00" 																//is second set to 00?
+											&& $appointment->isTimeslotOpen($_POST["loc"], $_POST["day"], $_POST["t"]))									// is timeslot free>
 										{
 											$newAppointment_id = $appointment->addAppointment(date ("Y-m-d H:i:s", strtotime($_POST['day']." ".$_POST['t'])),$_SESSION['user'], $_POST["h"], $_POST["loc"]);
 											if ($newAppointment_id>0)
@@ -82,7 +104,29 @@ if ($_SESSION['loggedin'] == true)
 					}
 				}
 			}
-
+			else
+			{
+				$availableDays = array();
+				$dayData = array();
+				if ($homeworkinfo["start"] >= date ('Y-m-d', time()))
+				{
+					$iterday = $homeworkinfo["start"];
+				}
+				else 
+				{
+					$iterday = date ('Y-m-d', time());
+				}
+				while (strtotime($iterday) <= strtotime($homeworkinfo["end"])) 
+				{
+					if(date ("D", strtotime($iterday)) != "Sat" && date ("D", strtotime($iterday)) != "Sun" )
+					{
+						$dayData["day"] = date ("Y-m-d", strtotime($iterday));
+						$dayData["slots"] = $appointment->countFreeSlotOnLocationBetweenDates($_POST["loc"],date ("Y-m-d", strtotime($iterday)), date ("Y-m-d", strtotime($iterday)));
+						array_push($availableDays, $dayData);
+ 					}
+ 					$iterday = date ("Y-m-d", strtotime("+1 day", strtotime($iterday)));
+ 				}
+			}
 		}
 		if (isset($_POST["deleteAppointment"]))
 		{
@@ -103,7 +147,6 @@ if ($_SESSION['loggedin'] == true)
 					{
 						$deletemessage = "Error";
 					}
-
 				}
 				else
 				{
@@ -113,5 +156,4 @@ if ($_SESSION['loggedin'] == true)
 		}
 	}
 }
-
 ?>

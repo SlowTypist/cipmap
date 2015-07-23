@@ -12,6 +12,7 @@ function db_connect()
 	}
 	catch (PDOException $e)
 	{
+		var_dump($e);
 		return 0;
 	}
 	return $db;

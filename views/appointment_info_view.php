@@ -29,10 +29,11 @@ else if ($appointmentinfo == -1 || isset($_POST['loc']))
 		?><form action ="appointment_info.php" method="post">
 		<input type="hidden" name="h" value="<?php echo $_GET['h'] ?>">
 		<table border="1">
+		<tr><td><b>Location</b></td><td><b>Number of available slots<b></td><td></td></tr>
 		<?php
 		foreach ($homeworklocations as $key => $value)
 		{
-			echo "<tr><td>".$homeworklocations[$key]["name"]."</td><td><input type='radio' name='loc' value=".$homeworklocations[$key]["location_id"]." required></td></tr>";
+			echo "<tr><td>".$value["name"]."</td><td>".$value["freeslots"]."</td><td><input type='radio' name='loc' value=".$value["location_id"]." required></td></tr>";
 		}
 		?>
 		</table><input type="submit" name="chosenLocation" value="Choose day"></form>
@@ -45,27 +46,31 @@ else if ($appointmentinfo == -1 || isset($_POST['loc']))
 		{
 			if ($homeworklocations[$key]["location_id"] == $_POST['loc'])
 			{
-				echo $homeworklocations[$key]["name"];
+				echo $value["name"];
 			}
 		}
 		if (!isset($_POST["day"]))
 		{ 
-
 			echo "<br><b>Choose day:</b><br>";
-			$iterday = $homeworkinfo["start"];?>
+			if ($homeworkinfo["start"] >= date ('Y-m-d', time()))
+			{
+				$iterday = $homeworkinfo["start"];
+			}
+			else 
+			{
+				$iterday = date ('Y-m-d', time());
+			}
+			;?>
 			<form action ="appointment_info.php" method="post">
 			<input type="hidden" name="h" value="<?php echo $_POST['h'] ?>">
 			<input type="hidden" name="loc" value="<?php echo $_POST['loc'] ?>">
 			<table border="1">
+			<tr><td><b>Day</b></td><td><b>Number of available slots<b></td><td></td></tr>
 			<?php
-			while (strtotime($iterday) <= strtotime($homeworkinfo["end"])) 
-			{
-				if(date ("D", strtotime($iterday)) != "Sat" && date ("D", strtotime($iterday)) != "Sun" )
-				{
-					echo "<tr><td>".date ("D d M Y", strtotime($iterday))."</td><td><input type='radio' name='day' value=".date ("Y-m-d", strtotime($iterday))." required></td></tr>";
- 				}
- 				$iterday = date ("Y-m-d", strtotime("+1 day", strtotime($iterday)));
- 			}?>
+			foreach ($availableDays as $key => $value) {
+				echo "<tr><td>".date ("D d M Y", strtotime($value["day"]))."</td><td>".$value["slots"]."</td><td><input type='radio' name='day' value=".date ("Y-m-d", strtotime($value["day"]))." required></td></tr>";
+			}
+			?>
  			</table><input type="submit" name="chosenDay" value="Choose timeslot"></form>
  			<?php
  			echo "<a href=appointment_info.php?h=".$_POST["h"].">Back to start</a><br>";
@@ -82,18 +87,18 @@ else if ($appointmentinfo == -1 || isset($_POST['loc']))
 				<input type="hidden" name="loc" value="<?php echo $_POST['loc'] ?>">
 				<input type="hidden" name="day" value="<?php echo $_POST['day'] ?>">
 				<table border="1">
+				<tr><td><b>Time</b></td><td></td></tr>
 				<?php
-				foreach ($workingHoursOnDay as $key => $value) {
-					$itertime = $workingHoursOnDay[$key]["open_time"];
-					while (strtotime($itertime) < strtotime($workingHoursOnDay[$key]["close_time"]))
-					{
-						echo "<tr><td>".date("H:i:s", strtotime('+20 minutes', strtotime($itertime)))."</td><td><input type='radio' name='t' value=".date("H:i:s", strtotime('+20 minutes', strtotime($itertime)))." required></td></tr>";
-						echo "<tr><td>".date("H:i:s", strtotime('+40 minutes', strtotime($itertime)))."</td><td><input type='radio' name='t' value=".date("H:i:s", strtotime('+40 minutes', strtotime($itertime)))." required></td></tr>";
-						$itertime = date ("H:i", strtotime('+60 minutes', strtotime($itertime)));
-					}
+				foreach ($availableTimeslots as $key => $value) {
+					echo "<tr><td>".$value."</td><td><input type='radio' name='t' required value=".$value." </td></tr>";
 				}
 				?>
 				</table><input type="submit" name="chosenTime" value="Continue"></form>
+				<form action ="appointment_info.php" method="post">
+				<input type="hidden" name="h" value="<?php echo $_POST['h'] ?>">
+				<input type="hidden" name="loc" value="<?php echo $_POST['loc'] ?>">
+				<input type="submit" name="chosenLocation" value="Back to days">
+				</form>
 				<?php
 			}
 			else
@@ -114,7 +119,7 @@ else if ($appointmentinfo == -1 || isset($_POST['loc']))
 					echo "<br>".$addmessage;
 				endif;
 			}
-			echo "<br><a href=appointment_info.php?h=".$_POST["h"].">Back to homework</a><br>";
+			echo "<br><a href=appointment_info.php?h=".$_POST["h"].">Back to start</a><br>";
 		}
 
 	}
