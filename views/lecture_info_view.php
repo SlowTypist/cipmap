@@ -1,10 +1,11 @@
 <?php include('_header.php'); ?>
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['id']))
-{
-	echo "<b>Lecture: </b>".$lectureinfo[0]['name']."<b> Teacher: </b>".$lectureinfo[0]['teacher']."<br><b>Maximum group size: </b>".$lectureinfo[0]['max_group_size'];
-	echo "<br><b>Maximum points available:</b> ".$allPoints;
-	?>
+{?>
+	<b>Lecture: </b><?php echo $lectureinfo[0]['name']?>
+	<b> Teacher: </b><?php echo $lectureinfo[0]['teacher']?><br>
+	<b>Maximum group size: </b><?php echo $lectureinfo[0]['max_group_size']?><br>
+	<b>Maximum points available:</b> <?php echo $allPoints?>
 	<table border="2">
 		<tr>
 			<td><b>Homework name</b></td>
@@ -42,14 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['id']))
 				echo "<td><a href='appointment_info.php?h=".$allhomeworks[$key]['id']."'>Register</a></td><td>N/A</td>";
 			}
 			?>
-
 		<tr>
 		<?php
 	}
-	?></table><br><?php echo "<b>Your total points: </b>".$totalPoint; ?><?php
-
+	?></table><br><b>Your total points: </b><?php echo $totalPoint; 
 }
-
 ?>
 
 

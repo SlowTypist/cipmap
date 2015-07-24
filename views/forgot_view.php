@@ -1,6 +1,5 @@
 <?php include('_header.php'); ?> 
 
-<?php ?>
 <?php echo $forgotresult?><br>
 <?php if ($_SERVER['REQUEST_METHOD'] != 'POST') {?>
 <form action="forgot.php" method="post">         

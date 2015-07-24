@@ -1,6 +1,5 @@
 <?php include('_header.php'); ?> 
 
-<?php ?>
 <?php echo $pwchangeresult?><br>
 <?php if ($_SERVER['REQUEST_METHOD'] != 'POST') {?>
 <form action="pwchange.php" method="post">         
@@ -14,6 +13,6 @@
         </form>
 <?php }?>
 
-    <a href="index.php"><?php echo "Back to main page"; ?></a>
+<a href="index.php"><?php echo "Back to main page"; ?></a>
 
 <?php include('_footer.php'); ?>

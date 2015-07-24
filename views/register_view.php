@@ -1,6 +1,5 @@
 <?php include('_header.php'); ?> 
 
-<?php ?>
 <?php echo $registerresult?><br>
 <?php if ($_SERVER['REQUEST_METHOD'] != 'POST') {?>
 <form action="register.php" method="post">         
@@ -17,6 +16,6 @@
         </form>
 <?php }?>
 
-    <a href="index.php"><?php echo "Back to main page"; ?></a>
+<a href="index.php"><?php echo "Back to main page"; ?></a>
 
 <?php include('_footer.php'); ?>
