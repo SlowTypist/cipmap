@@ -22,13 +22,18 @@ if (isset($_GET['h']) && $appointmentinfo != -1)
 	echo "<a href=lecture_info.php?id=".$appointmentinfo["lecture_id"].">Back to lecture</a><br>";	
 }
 else if ($appointmentinfo == -1 || isset($_POST['loc']))
-{
-	echo "<b>Lecture: </b>".$homeworkinfo['lecture_name']."<b> Teacher: </b>".$homeworkinfo['teacher']."<br><b>Maximum group size: </b>".$homeworkinfo['max_group_size'];
-	echo "<br><b>Homework name: </b>".$homeworkinfo["homework_name"]." <b>Start date: </b>".date("d M Y", strtotime($homeworkinfo["start"]))." <b>End date: </b>".date("d M Y", strtotime($homeworkinfo["end"]));
+{?>
+	<b>Lecture: </b><?php echo $homeworkinfo['lecture_name']?>
+	<b> Teacher: </b><?php echo $homeworkinfo['teacher']?><br>
+	<b>Maximum group size: </b><?php echo $homeworkinfo['max_group_size']?>
+	<br><b>Homework name: </b><?php echo $homeworkinfo["homework_name"]?>
+	<b>Start date: </b><?php echo date("d M Y", strtotime($homeworkinfo["start"]))?>
+	<b>End date: </b><?php echo date("d M Y", strtotime($homeworkinfo["end"]))?>
+	<?php
 	if (!isset($_POST['loc']))
-	{
-		echo "<br><br><b>Choose location:</b><br>";
-		?><form action ="appointment_info.php" method="post">
+	{?>
+		<br><br><b>Choose location:</b><br>
+		<form action ="appointment_info.php" method="post">
 		<input type="hidden" name="h" value="<?php echo $_GET['h'] ?>">
 		<table border="1">
 		<tr><td><b>Location</b></td><td><b>Number of available slots<b></td><td></td></tr>
@@ -42,8 +47,9 @@ else if ($appointmentinfo == -1 || isset($_POST['loc']))
 		<?php
 	}
 	else
-	{
-		echo "<br><br><b>Location: </b>";
+	{?>
+		<br><br><b>Location: </b>
+		<?php
 		foreach ($homeworklocations as $key => $value) 
 		{
 			if ($homeworklocations[$key]["location_id"] == $_POST['loc'])
@@ -52,17 +58,8 @@ else if ($appointmentinfo == -1 || isset($_POST['loc']))
 			}
 		}
 		if (!isset($_POST["day"]))
-		{ 
-			echo "<br><b>Choose day:</b><br>";
-			if ($homeworkinfo["start"] >= date ('Y-m-d', time()))
-			{
-				$iterday = $homeworkinfo["start"];
-			}
-			else 
-			{
-				$iterday = date ('Y-m-d', time());
-			}
-			;?>
+		{ ?>
+			<br><b>Choose day:</b><br>
 			<form action ="appointment_info.php" method="post">
 			<input type="hidden" name="h" value="<?php echo $_POST['h'] ?>">
 			<input type="hidden" name="loc" value="<?php echo $_POST['loc'] ?>">
@@ -74,16 +71,16 @@ else if ($appointmentinfo == -1 || isset($_POST['loc']))
 			}
 			?>
  			</table><input type="submit" name="chosenDay" value="Choose timeslot"></form>
+ 			<a href=appointment_info.php?h=<?php echo $_POST["h"]?>>Back to start</a><br>
  			<?php
- 			echo "<a href=appointment_info.php?h=".$_POST["h"].">Back to start</a><br>";
 		}
 		else
-		{
-			echo "<br><b>Day: </b>".date("D d M Y", strtotime($_POST["day"]));
+		{?>
+			<br><b>Day: </b><?php echo date("D d M Y", strtotime($_POST["day"]))?>
+			<?php
 			if (!isset($_POST["t"]))
-			{
-				echo "<br><b>Choose time:</b><br>";
-				?>
+			{?>
+				<br><b>Choose time:</b><br>
 				<form action ="appointment_info.php" method="post">
 				<input type="hidden" name="h" value="<?php echo $_POST['h'] ?>">
 				<input type="hidden" name="loc" value="<?php echo $_POST['loc'] ?>">
@@ -104,9 +101,8 @@ else if ($appointmentinfo == -1 || isset($_POST['loc']))
 				<?php
 			}
 			else
-			{
-				echo "<br><b>Timeslot:</b>";
-				echo $_POST["t"];
+			{?>
+				<br><b>Timeslot:</b><?php echo $_POST["t"];
 				if (!isset($_POST["confirmed"])):
 				?>
 				<form action ="appointment_info.php" method="post">
@@ -121,12 +117,13 @@ else if ($appointmentinfo == -1 || isset($_POST['loc']))
 					echo "<br>".$addmessage;
 				endif;
 			}
-			echo "<br><a href=appointment_info.php?h=".$_POST["h"].">Back to start</a><br>";
+			?>
+			<br><a href=appointment_info.php?h=<?php echo $_POST["h"]?>>Back to start</a><br>
+			<?php
 		}
-
-	}
-	echo "<br><a href=lecture_info.php?id=".$homeworkinfo["lecture_id"].">Back to lecture</a><br>";
-
+	}?>
+	<br><a href=lecture_info.php?id=<?php echo $homeworkinfo["lecture_id"]?>>Back to lecture</a><br>
+	<?php
 }
 else if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["deleteAppointment"]))
 {
