@@ -170,7 +170,6 @@ if ($_SESSION['loggedin'] == true && $_SESSION['role'] >= 2)
 					}
 					$addresult = "New task successfully added";
 				}
-
 			}
 		}
 		if (isset($_POST['Change']))
@@ -287,7 +286,6 @@ if ($_SESSION['loggedin'] == true && $_SESSION['role'] >= 2)
 			{
 				$changeresult = "Error";
 			}
-
 		}
 	}
 }

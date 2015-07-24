@@ -1,7 +1,6 @@
 <?php
 	include(dirname(__DIR__).'/config/config.php');
 	include_once dirname(__FILE__).'/db.php';
-
 	class lecture
 	{
 		public function getLectureInfo($id)
@@ -17,7 +16,6 @@
 					$db = null;
 					$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 					return $result;
-
 				}
 				catch (PDOException $e)
 				{
@@ -30,14 +28,12 @@
 				$db = null;
 				return 0;
 			}
-
 		}
 		public function listAlllectures()
 		{
 			$db = db_connect();
 			if ($db)
 			{
-
 				try
 				{
 					$stmt = $db->prepare("SELECT id, name FROM cip_lecture ORDER BY id DESC");
@@ -58,7 +54,6 @@
 			{
 				return 0;		//db error
 			}
-
 		}
 		public function addLecture($name, $teacher, $max_group_size)
 		{
@@ -81,14 +76,12 @@
 					{
 						return 0;
 					}
-
 				}
 				catch (PDOException $e)
 				{
 					$db = null;
 					return 0;
 				}
-
 			}
 			else
 			{
@@ -116,14 +109,12 @@
 					{
 						return 0;
 					}
-
 				}
 				catch (PDOException $e)
 				{
 					$db = null;
 					return 0;
 				}
-
 			}
 			else
 			{
@@ -132,7 +123,7 @@
 		}
 		public function deleteLecture($id)
 		{
-						$db = db_connect();
+			$db = db_connect();
 			if ($db)
 			{
 				try
@@ -148,21 +139,17 @@
 					{
 						return 0;
 					}
-
 				}
 				catch (PDOException $e)
 				{
 					$db = null;
 					return 0;
 				}
-
 			}
 			else
 			{
 				return 0;
 			}
 		}
-
 	}
-
 ?>

@@ -133,7 +133,6 @@ class appointment
 		{
 			return 0;		//db error
 		}
-
 	}
 	public function userHomeworkAppointment($user_id, $homework_id)
 	{
@@ -210,7 +209,6 @@ class appointment
 		{
 			return 0;		//db error
 		}
-
 	}
 	public function deleteAppointment($appointment_id)
 	{
@@ -232,7 +230,6 @@ class appointment
 					return 0;
 				}
 			}
-
 			catch (PDOException $e)
 			{
 				$db = null;
@@ -243,9 +240,6 @@ class appointment
 		{
 			return 0;		//db error
 		}
-
 	}
-
 }
-
 ?>

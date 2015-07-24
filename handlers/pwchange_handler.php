@@ -3,8 +3,7 @@ require_once('includes/user.php');
 $pwchangeresult = "";
 session_start();
 if ($_SESSION['loggedin'] != true)
-{
-	
+{	
 	header('Location: index.php');
 }
 if (isset($_SESSION['LAST_ACTIVITY'])==0 || (time() - $_SESSION['LAST_ACTIVITY'] > 1800)) {
@@ -17,13 +16,11 @@ else
 {
 		$_SESSION['LAST_ACTIVITY'] = time();
 }
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
 	if (isset($_POST["Changepw"]))
 	{
 		$user = new user();
-
 		$result = $user->changePassword($_SESSION['user'], $_POST['current_pw'], $_POST['new_pw'], $_POST['new_pw_repeat']);
 		if ($result > 0)
 		{
@@ -48,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			$pwchangeresult = "Your new password must be at least 6 symbols long. Please try again";
 		}		
 	}
-
 }
 if($pwchangeresult !== "")
 	$pwchangeresult = "<p class='error'>{$pwchangeresult}</p>";

@@ -9,7 +9,6 @@
 			$db = db_connect();
 			if ($db)
 			{
-
 				try
 				{
 					$stmt = $db->prepare("SELECT id, password, active, role FROM cip_user WHERE email= :email");
@@ -48,7 +47,6 @@
 			}
 
 		}
-
 		public function register($email, $surname, $name, $matrnr, $pw, $pw_repeat)
 		//0 - db error,-1 email exists in db, -2 one of the fields is empty, -3 pw and pw_repeat don't match, -4 pw too short, -5 matrnt is of wrong length or is not numeric, -6 email did not validate,
 		//-7 verification email failed
@@ -76,7 +74,6 @@
             {
            	 	return -6;
         	}
-
 			$db = db_connect();
 			if ($db)
 			{
@@ -139,9 +136,6 @@
 				return 0;
 			}
 		}
-		
-
-
 		public function sendVerificationEmail($user_id, $email, $activation_hash)
 		{
 			$mail  = new PHPMailer;
@@ -367,7 +361,6 @@
 				$db = 0;
 				return 0;
 			}
-
 		}
 		public function changePassword($user_id, $cur_pw, $new_pw, $new_pw_repeat)
 		//1 success, 0 db problem, -1 wrong current password, -2 wrong repeat, -3 new password is empty -4 new password is too short
@@ -549,8 +542,6 @@
 			{
 				return 0;
 			}
-
 		}
 	}
-
 ?>

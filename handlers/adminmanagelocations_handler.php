@@ -16,12 +16,10 @@ if ($_SESSION['loggedin'] == true && $_SESSION['role'] == 3)
 {
 	if ($_SERVER['REQUEST_METHOD'] == 'GET')
 	{
-
 		if (isset($_GET["getid"]))
 		{
 			$admin = new admin();
 			$locationinfo = $admin->getLocationName($_GET["getid"]);
-
 		}
 		else
 		{
@@ -37,12 +35,10 @@ if ($_SESSION['loggedin'] == true && $_SESSION['role'] == 3)
 				{
 					$deleteresult = "Error";
 				}
-
 			}
 			$admin = new admin();
 			$alllocations = $admin->listAllLocations();
-		}
-				
+		}				
 	}
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
@@ -57,17 +53,13 @@ if ($_SESSION['loggedin'] == true && $_SESSION['role'] == 3)
 			$admin = new admin();
 			$addresult = $admin->editLocation($_POST["id"], $_POST["name"]);
 			$alllocations = $admin->listAllLocations();
-		}
-		
-	}
-	
+		}		
+	}	
 }
 else
 {
 	header('Location: ../login.php');
 }
-
-
 if($deleteresult !== "")
 	$deleteresult = "<p class='error'>{$deleteresult}</p>";
 

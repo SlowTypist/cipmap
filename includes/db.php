@@ -1,10 +1,7 @@
 <?php
-
-
 function db_connect()
 /** connects to database */
 {
-
 	try
 	{
 		include(dirname(__DIR__).'/config/config.php');
@@ -17,7 +14,6 @@ function db_connect()
 	}
 	return $db;
 }
-
 function lock_tables($tables, $db)
 {
 	try
@@ -35,8 +31,7 @@ function lock_tables($tables, $db)
 	{
 		return 0;
 	}
-}
-		
+}		
 function unlock($db)
 {
 	try
@@ -49,6 +44,4 @@ function unlock($db)
 		return 0;
 	}
 }
-
-
 ?>

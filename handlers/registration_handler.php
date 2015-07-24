@@ -20,7 +20,6 @@ if ($_SESSION['loggedin'] == true)
 	{
 		header('Location: admin.php');
 	}
-
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -43,7 +42,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			$registerresult = "Account registered but verification e-mail wasn't sent. Please contact tutor to activate your account.";
 		}		
 	}
-
 }
 if($registerresult !== "")
 	$registerresult = "<p class='error'>{$registerresult}</p>";

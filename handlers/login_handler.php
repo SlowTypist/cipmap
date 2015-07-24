@@ -21,14 +21,12 @@ if ($_SESSION['loggedin'] == true)
 	{
 		header('Location: admin/admin.php');
 	}
-
 }
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
 	if (isset($_POST["login"]))
 	{
 		$user = new user();
-
 		$email = $_POST['email'];
 		$pw = $_POST['pw'];
 		$result = $user->login($email, $pw);
@@ -53,7 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			$loginerror =  "System error";
 		}
 	}
-
 }
 if($loginerror !== "")
 	$loginerror = "<p class='error'>{$loginerror}</p>";

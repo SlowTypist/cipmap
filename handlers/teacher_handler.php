@@ -31,7 +31,6 @@ if ($_SESSION['loggedin'] == true && ($_SESSION['role'] == 3 || $_SESSION['role'
 		{
 			$deletemessage = "Error";
 		}
-
 	}
 	$alllectures = $lecture->listAlllectures();
 }
@@ -39,9 +38,6 @@ else
 {
 	header('Location: ../login.php');
 }
-
-
 if($loginerror !== "")
 	$loginerror = "<p class='error'>{$loginerror}</p>";
-
 ?>

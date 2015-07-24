@@ -23,8 +23,6 @@ else
 {
 	header('Location: ../login.php');
 }
-
-
 if($loginerror !== "")
 	$loginerror = "<p class='error'>{$loginerror}</p>";
 

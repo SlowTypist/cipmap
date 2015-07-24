@@ -1,23 +1,25 @@
 <?php include('_header.php'); ?>
 <?php 
 if (isset($_GET['h']) && $appointmentinfo != -1)
-{
-	echo "<b>Lecture: </b>".$appointmentinfo['lecture_name']."<b> Teacher: </b>".$appointmentinfo['teacher']."<br><b>Maximum group size: </b>".$appointmentinfo['max_group_size'];
-	echo "<br><b>Homework name: </b>".$appointmentinfo["homework_name"]."<b> Your score: </b>";
+{?>
+	<b>Lecture:</b><?php echo $appointmentinfo['lecture_name']?><b> Teacher: </b><?php echo $appointmentinfo['teacher']?><br>
+	<b>Maximum group size:</b> <?php echo $appointmentinfo['max_group_size']?>
+	<br><b>Homework name: </b><?php echo $appointmentinfo["homework_name"]?><b> Your score: </b>
+	<?php
 	if (isset($appointmentinfo['points']))
 	{
 		echo $appointmentinfo['points'];
 	} 
 	else {
 		echo "0";
-	}
-	echo " out of ".$appointmentinfo["max_points"];
-	echo "<br><b>Your appointment: </b>".date("D d M Y H:i", strtotime($appointmentinfo["time"]))." at ".$appointmentinfo["location_name"]."";
-	?><br><form action="appointment_info.php" method="post">
+	}?>
+	out of <?php echo $appointmentinfo["max_points"]?>
+	<br><b>Your appointment: </b> <?php echo date("D d M Y H:i", strtotime($appointmentinfo["time"]))." at ".$appointmentinfo["location_name"]?>
+	<br><b>Your group:</b>
+	<br><br><form action="appointment_info.php" method="post">
 		<input type="hidden" name="homework_id" value="<?php echo $_GET['h'] ?>">
 		<input type="submit" name="deleteAppointment" value="Cancel appointment" /></form><?php
-	echo "<a href=lecture_info.php?id=".$appointmentinfo["lecture_id"].">Back to lecture</a><br>";
-	
+	echo "<a href=lecture_info.php?id=".$appointmentinfo["lecture_id"].">Back to lecture</a><br>";	
 }
 else if ($appointmentinfo == -1 || isset($_POST['loc']))
 {

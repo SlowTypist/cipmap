@@ -7,10 +7,8 @@ if ($_SESSION['loggedin'] == true)
 {
 	header('Location: index.php');
 }
-
 if ($_SERVER['REQUEST_METHOD'] == 'GET')
-{
-	
+{	
 	if (isset($_GET["id"]))
 	{
 		$user = new user();
@@ -28,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 			$verifyerror =  "No database connection";
 		}
 	}
-
 }
 else
 {
@@ -38,5 +35,4 @@ if($verifyresult !== "")
 	$verifyresult = "<p class='result'>{$verifyresult}</p>";
 if($verifyerror !== "")
 	$verifyerror = "<p class='error'>{$verifyerror}</p>";
-
 ?>

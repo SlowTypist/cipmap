@@ -9,19 +9,16 @@
 			$db = db_connect();
 			if ($db)
 			{
-
 				try
 				{
 					$stmt = $db->prepare("SELECT id, name, lecture_id, start, end, max_points, link_task, link_solution FROM cip_homework WHERE id=:homework_id");
 					$stmt->bindValue(':homework_id', $homework_id, PDO::PARAM_INT);
 					$stmt->execute();
 					$homeworkinfo = $stmt->fetch(PDO::FETCH_ASSOC);
-
 					return $homeworkinfo;
 				}
 				catch (PDOException $e)
 				{
-
 					$db = null;
 					return 0;		//db error
 				}
@@ -30,14 +27,12 @@
 			{
 				return 0;		//db error
 			}
-
 		}
 		public function getHomeworkInfoNoSolution($homework_id)
 		{
 			$db = db_connect();
 			if ($db)
 			{
-
 				try
 				{
 					$stmt = $db->prepare("SELECT A.id as lecture_id, A.name as homework_name, A.lecture_id, start, end, max_points, link_task, B.name as lecture_name, B.teacher, B.max_group_size 
@@ -47,12 +42,10 @@
 					$stmt->bindValue(':homework_id', $homework_id, PDO::PARAM_INT);
 					$stmt->execute();
 					$homeworkinfo = $stmt->fetch(PDO::FETCH_ASSOC);
-
 					return $homeworkinfo;
 				}
 				catch (PDOException $e)
 				{
-
 					$db = null;
 					return 0;		//db error
 				}
@@ -61,7 +54,6 @@
 			{
 				return 0;		//db error
 			}
-
 		}
 		public function getHomeworkLocations($homework_id)
 		{
@@ -78,7 +70,6 @@
 				}
 				catch (PDOException $e)
 				{
-
 					$db = null;
 					return 0;		//db error
 				}
@@ -87,14 +78,12 @@
 			{
 				return 0;		//db error
 			}
-
 		}
 		public function listAllHomeworks($lecture_id)
 		{
 			$db = db_connect();
 			if ($db)
 			{
-
 				try
 				{
 					$stmt = $db->prepare("SELECT id, name, start, end, max_points, (link_task != '') AS task_exists FROM cip_homework WHERE lecture_id=:lecture_id ORDER BY id");
@@ -103,11 +92,9 @@
 					$db = null;
 					$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 					return $result;
-					$db = null;
 				}
 				catch (PDOException $e)
 				{
-
 					$db = null;
 					return 0;		//db error
 				}
@@ -116,7 +103,6 @@
 			{
 				return 0;		//db error
 			}
-
 		}
 		public function addHomework($name, $lecture_id, $start, $end, $max_points, $link_task, $link_solution)
 		{
@@ -148,7 +134,6 @@
 				}
 				catch (PDOException $e)
 				{
-
 					$db = null;
 					return 0;		//db error
 				}
@@ -179,7 +164,6 @@
 					{
 						return 0;
 					}
-
 				}
 				catch (PDOException $e)
 				{
@@ -187,8 +171,6 @@
 					$db = null;
 					return 0;
 				}
-
-
 			}
 			else
 			{
@@ -217,12 +199,9 @@
 				}
 				catch (PDOException $e)
 				{
-					var_dump($e);
 					$db = null;
 					return 0;
-
 				}
-
 			}
 			else
 			{
@@ -253,7 +232,6 @@
 					{
 						return 0;
 					}
-
 				}
 				catch (PDOException $e)
 				{
@@ -266,7 +244,6 @@
 			{
 				return 0;
 			}
-
 		}
 		public function deleteHomework($homework_id)
 		{
@@ -290,7 +267,6 @@
 					{
 						return 0;
 					}
-
 				}
 				catch (PDOException $e)
 				{
@@ -298,7 +274,6 @@
 					$db = null;
 					return 0;
 				}
-
 			}
 			else
 			{
@@ -332,20 +307,17 @@
 					{
 						return -1;
 					}
-
 				}
 				catch (PDOException $e)
 				{
 					$db = null;
 					return -1;
 				}
-
 			}
 			else
 			{
 				return -1;
 			}
-
 		}
 		public function allPoints($lecture_id)
 		{
@@ -381,14 +353,11 @@
 					$db = null;
 					return -1;
 				}
-
 			}
 			else
 			{
 				return -1;
 			}
-
 		}
-
 	}
 ?>

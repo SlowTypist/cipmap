@@ -27,7 +27,6 @@ if ($_SESSION['loggedin'] == true && $_SESSION['role'] == 3)
 			$user = new user();
 			$allusers = $user->listAllUsers();
 		}
-		
 	}
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
@@ -51,16 +50,12 @@ if ($_SESSION['loggedin'] == true && $_SESSION['role'] == 3)
 				$changeresult = "Incorrent information";
 			}
 		}
-
 	}
-	
 }
 else
 {
 	header('Location: ../login.php');
 }
-
-
 if($changeresult !== "")
 	$changeresult = "<p class='error'>{$changeresult}</p>";
 

@@ -14,7 +14,6 @@ else
 {
 		$_SESSION['LAST_ACTIVITY'] = time();
 }
-
 if ($_SESSION['loggedin'] == true)
 {
 	if ($_SERVER['REQUEST_METHOD'] == 'GET')
@@ -30,10 +29,8 @@ if ($_SESSION['loggedin'] == true)
 			$homework = new homework();
 			$allhomeworks = $homework->listAllHomeworks($_GET["id"]);
 			$allPoints = $homework->allPoints($_GET["id"]);
-
 			$appointment = new appointment();
 			$allAppointments = $appointment->allUserLectureAppointments($_SESSION["user"], $_GET["id"]);
-
 		}
 		else
 		{
@@ -41,5 +38,4 @@ if ($_SESSION['loggedin'] == true)
 		}
 	}
 }
-
 ?>

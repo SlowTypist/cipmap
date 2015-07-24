@@ -189,7 +189,7 @@
 				return 0;
 			}
 		}
-		public function changeWorkingHours($id, $boxes) 	//very monstrous function that makes the correct working times
+		public function changeWorkingHours($id, $boxes) 	//very monstrous function that sets correct working times
 		{
 			$currentOpen = strtotime('08:00:00');
 			$currentClosed = strtotime('09:00:00');

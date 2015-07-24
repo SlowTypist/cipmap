@@ -38,8 +38,6 @@ else
 {
 	header('Location: ../login.php');
 }
-
-
 if($result !== "")
 	$result = "<p class='error'>{$result}</p>";
 

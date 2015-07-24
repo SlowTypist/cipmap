@@ -17,7 +17,6 @@
 					$db = null;
 					$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 					return $result;
-
 				}
 				catch (PDOException $e)
 				{
@@ -50,7 +49,6 @@
 					$db = null;
 					return 0;
 				}
-
 			}
 			else
 			{
@@ -78,7 +76,6 @@
 					$db = null;
 					return 0;
 				}
-
 			}
 			else
 			{
@@ -87,6 +84,4 @@
 			}
 		}
 	}
-
-
 ?>

@@ -8,7 +8,6 @@ if ($_SESSION['loggedin'] == true)
 {
 	header('Location: index.php');
 }
-
 if ($_SERVER['REQUEST_METHOD'] == 'GET')
 {
 	if (isset($_GET["id"]) && isset($_GET["verification_code"]))
@@ -32,7 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 	{
 		header('Location: index.php');
 	}
-
 }
 elseif ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
@@ -61,7 +59,6 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST')
 			$changeresult = "Password is too short. Your password must be at least 6 symbols long. Please try again";
 		}
 	}
-
 }
 if($verifyerror !== "")
 	$verifyerror = "<p class='error'>{$verifyerror}</p>";

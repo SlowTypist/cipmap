@@ -6,13 +6,11 @@ if ($_SESSION['loggedin'] == true)
 {
 	header("Location:index.php");
 }
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
 	if (isset($_POST["Forgot"]))
 	{
 		$user = new user();
-
 		$result = $user->sendForgot($_POST['email']);
 		if ($result == -1)
 		{
@@ -34,9 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 		{
 			$forgotresult = "SMTP error";
 		}	
-
 	}
-
 }
 if($forgotresult !== "")
 	$forgotresult = "<p class='error'>{$forgotresult}</p>";
