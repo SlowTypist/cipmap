@@ -36,6 +36,10 @@ if ($_SESSION['loggedin'] == true)
 					$homeworklocations[$key]["freeslots"]=$appointment->countFreeSlotOnLocationBetweenDates($value["location_id"],$homeworkinfo["start"], $homeworkinfo["end"]);
 				}
 			}
+			else
+			{
+				$teammates_info = $appointment->searchAppointmentByCode($_GET["h"], $appointmentinfo["code"]);
+			}
 		}
 		else
 		{	
@@ -44,7 +48,7 @@ if ($_SESSION['loggedin'] == true)
 	}
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
-		if (!isset($_POST["deleteAppointment"]))						///work for different sequential pages, when you choose timeslot
+		if (isset($_POST["loc"]) && ($appointment->userHomeworkAppointment($_SESSION['user'], $_POST["h"]) != -1) )						///work for different sequential pages, when you choose timeslot
 		{
 			$appointment = new appointment();
 			$homework = new homework();
@@ -104,7 +108,7 @@ if ($_SESSION['loggedin'] == true)
 					}
 				}
 			}
-			else
+			else 	//if dayis not set
 			{
 				$availableDays = array();
 				$dayData = array();
@@ -128,7 +132,98 @@ if ($_SESSION['loggedin'] == true)
  				}
 			}
 		}
-		if (isset($_POST["deleteAppointment"]))
+		else if (isset($_POST["codeGiven"]))
+		{
+			$codeGivenError = "";
+			$_POST['code'] = trim($_POST['code']);
+			$appointment = new appointment();
+			$homework = new homework();
+			$location = new location();
+			$homeworkinfo = $homework->getHomeworkInfoNoSolution($_POST["h"]);
+			$homeworklocations = $homework->getHomeworkLocations($_POST["h"]);
+			$app_info = $appointment->searchAppointmentByCode($_POST["h"], $_POST["code"]);
+			if ($appointment->userHomeworkAppointment($_SESSION['user'], $_POST["h"]) == -1)
+			{
+				if (count($app_info) < $homeworkinfo['max_group_size'])
+				{
+					if (strtotime($app_info[0]["time"]) > time())
+					{
+						$sameUserTestPassed = 1;
+						foreach ($app_info as $key => $value) {
+							if($value['user_id'] == $_SESSION['user'])
+							{
+								$sameUserTestPassed = 0;
+								$codeGivenError = "You cannot add yourself to the same appointment (What are you doing here anyway?)";
+							}
+						}
+					}
+					else
+					{
+						$codeGivenError = "Sorry, but this appointment already took place";
+					}
+				}
+				else
+				{
+					$codeGivenError = "Sorry, group is full";
+				}
+			}
+			else
+			{
+				$codeGivenError = "You already have an appointment.";
+			}
+		}
+		else if (isset($_POST["codeConfirmed"]))
+		{
+			$codeConfirmed = "";
+			$appointment = new appointment();
+			$homework = new homework();
+			$location = new location();
+			$homeworkinfo = $homework->getHomeworkInfoNoSolution($_POST["h"]);
+			$homeworklocations = $homework->getHomeworkLocations($_POST["h"]);
+			$app_info = $appointment->searchAppointmentByCode($_POST["h"], $_POST["code"]);
+			if ($appointment->userHomeworkAppointment($_SESSION['user'], $_POST["h"]) == -1)
+			{
+				if (count($app_info) < $homeworkinfo['max_group_size'])
+				{
+					if (strtotime($app_info[0]["time"]) > time())
+					{
+						$sameUserTestPassed = 1;	
+						foreach ($app_info as $key => $value) {
+							if($value['user_id'] == $_SESSION['user'])
+							{
+								$sameUserTestPassed = 0;
+								$codeConfirmed = "You are already set for an appointment with this code";
+							}
+						}
+						if ($sameUserTestPassed)
+						{
+							$newAppointment_id = $appointment->addAppointment($app_info[0]['time'],$_SESSION['user'], $_POST["h"], $app_info[0]["location_id"], $app_info[0]["code"]);
+							if ($newAppointment_id>0)
+							{
+								$codeConfirmed="Your appointment is successfully added";
+							}
+							else 
+							{
+								$codeConfirmed="Error. Please try again";
+							}					
+						}
+					}
+					else
+					{
+						$codeConfirmed = "Sorry, but this appointment already took place";
+					}
+				}
+				else
+				{
+					$codeConfirmed = "Sorry, group is full";
+				}
+			}
+			else
+			{
+				$codeConfirmed = "You already have an appointment.";
+			}
+		}
+		else if (isset($_POST["deleteAppointment"]))
 		{
 			$appointment = new appointment();
 			$appointmentinfo = $appointment->userHomeworkAppointment($_SESSION['user'], $_POST["homework_id"]);

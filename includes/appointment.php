@@ -142,7 +142,7 @@ class appointment
 
 			try
 			{
-				$stmt = $db->prepare("SELECT A.id AS appointment_id, A.time, A.location_id, A.points, B.name AS homework_name, B.start, B.end, B.max_points, C.id AS lecture_id, C.name AS lecture_name, C.teacher, C.max_group_size, D.name AS location_name
+				$stmt = $db->prepare("SELECT A.id AS appointment_id, A.time, A.location_id, A.code, A.points, B.name AS homework_name, B.start, B.end, B.max_points, C.id AS lecture_id, C.name AS lecture_name, C.teacher, C.max_group_size, D.name AS location_name
 										FROM cip_appointment A, cip_homework B, cip_lecture C, cip_location D
 										WHERE A.user_id=:user_id 
 										AND B.id=:homework_id
@@ -174,19 +174,23 @@ class appointment
 			return 0;		//db error
 		}
 	}
-	public function addAppointment($time, $user_id, $homework_id, $location_id)
+	public function addAppointment($time, $user_id, $homework_id, $location_id, $code = NULL)
 	{
 		$db = db_connect();
 		if ($db)
 		{
-
 			try
 			{
-				$stmt = $db->prepare("INSERT INTO cip_appointment(time, user_id, homework_id, location_id) VALUES (:time, :user_id, :homework_id, :location_id)");
+				if (!isset($code))
+				{
+					 $code = sha1(uniqid(mt_rand(), true)).strtotime($time);
+				}
+				$stmt = $db->prepare("INSERT INTO cip_appointment(time, user_id, homework_id, location_id, code) VALUES (:time, :user_id, :homework_id, :location_id, :code)");
 				$stmt->bindValue(':time', $time, PDO::PARAM_STR);
 				$stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
 				$stmt->bindValue(':homework_id', $homework_id, PDO::PARAM_INT);
 				$stmt->bindValue(':location_id', $location_id, PDO::PARAM_INT);
+				$stmt->bindValue(':code', $code,  PDO::PARAM_STR);
 				$stmt->execute();
 				$appointment_id =$db->lastInsertId();
 				if ($stmt)
@@ -210,13 +214,44 @@ class appointment
 			return 0;		//db error
 		}
 	}
-	public function deleteAppointment($appointment_id)
+	public function searchAppointmentByCode($homework_id, $code)
 	{
 		$db = db_connect();
 		if ($db)
 		{
-
 			try
+			{
+				$stmt = $db->prepare("SELECT A.time, A.location_id, A.code,A.user_id, B.name, B.surname FROM cip_appointment A, cip_user B WHERE A.code =:code AND A.homework_id =:homework_id AND B.id = A.user_id");
+				$stmt->bindValue(':homework_id', $homework_id, PDO::PARAM_INT);
+				$stmt->bindValue(':code', $code, PDO::PARAM_STR);
+				$stmt->execute();
+				$res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+				if ($stmt)
+				{
+					return $res;
+				}
+				else 
+				{
+					return 0;
+				}
+			}
+			catch (PDOException $e)
+			{
+				$db = null;
+				return 0;		//db error
+			}
+		}
+		else
+		{
+			return 0;		//db error
+		}
+
+	}
+	public function deleteAppointment($appointment_id)
+	{
+		$db = db_connect();
+		if ($db)
+		{			try
 			{
 				$stmt = $db->prepare("DELETE FROM cip_appointment WHERE id = :appointment_id");
 				$stmt->bindValue(':appointment_id', $appointment_id, PDO::PARAM_INT);
