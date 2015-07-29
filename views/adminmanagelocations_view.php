@@ -14,7 +14,7 @@ else if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET["getid"]) && !isset(
 {
 ?>
 	<form action="adminmanagelocations.php" method="post">         
-            <fieldset>
+            <fieldset style="width:10%">
                 <legend>Location</legend>
                 <input type="hidden" name="id" value=<?php echo $_GET['getid'] ?>>
                 <label>Name: <input type="text" name="name" value="<?php echo $locationinfo[0]['name'] ?>"></label><br>
@@ -29,7 +29,7 @@ else if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET["getid"]) && !isset(
 else if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['add']))
 {?>
 		<form action="adminmanagelocations.php" method="post">         
-            <fieldset>
+            <fieldset style="width:10%">
                 <legend>Add location</legend>
                 <label>Name: <input type="text" name="name" value=""></label><br>
                 <input type="submit" name="Add" value="Add new location" />

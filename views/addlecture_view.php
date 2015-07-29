@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 else if ($_SERVER['REQUEST_METHOD'] == 'GET')
 {?>
 		<form action="addlecture.php" method="post">         
-            <fieldset>
+            <fieldset style="width:300px">
                 <legend>Add lecture</legend>
                 <label>Name: <input type="text" name="name" value=""></label>Please write a name in format (Semester)ModuleNumber - Lecture name. <br>(e.g. (WS15)101 - Basics in creating lecture names)<br>
                 <label>Teacher: <input type="text" name="teacher" value=""></label><br>

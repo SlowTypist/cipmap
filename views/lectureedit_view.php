@@ -17,7 +17,7 @@ if (isset($_GET['add']) || isset($_GET['homework_id']))
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['getid']))
 {?>
         <form action="lectureedit.php" method="post" enctype="multipart/form-data">         
-            <fieldset>
+            <fieldset style="width:250px">
                 <legend>Change lecture information</legend>
                 <input type="hidden" name="lecture_id" value="<?php echo $_GET['getid'] ?>">
                 <label>Name: <input type="text" name="name" value="<?php echo $lectureinfo[0]['name'] ?>" required></label>
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['getid']))
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['add']))
 {?>
 		<form action="lectureedit.php" method="post" enctype="multipart/form-data">         
-            <fieldset>
+            <fieldset style="width:20%">
                 <legend>Add homework</legend>
                 <label>Name: <input type="text" name="name" value="" required></label>
                 <input type="hidden" name="lecture_id" value=<?php echo $_GET['add'] ?>>
@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['add']))
 else if($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['homework_id']))
 {?>
         <form action="lectureedit.php" method="post" enctype="multipart/form-data">         
-            <fieldset>
+            <fieldset style="width:35%">
                 <legend>Change homework</legend>
                 <input type="hidden" name="homework_id" value=<?php echo $_GET["homework_id"] ?>>
                 <label>Name: <input type="text" name="name" value="<?php echo $homework_info['name'];  ?>" required></label>

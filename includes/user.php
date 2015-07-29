@@ -11,12 +11,13 @@
 			{
 				try
 				{
+					$email = trim($email);
 					$stmt = $db->prepare("SELECT id, password, active, role FROM cip_user WHERE email= :email");
 					$stmt->bindParam(':email', $email);
 					$stmt->execute();
 					$db = null;
 					$result = $stmt->fetch(PDO::FETCH_ASSOC);
-					if ($result && $result["password"] == sha1($pw))
+					if ($result && $result["password"] == sha1($email.$pw))
 					{
 						if($result["active"])
 						{
@@ -90,7 +91,7 @@
 					}
 					else
 					{
-						$pw = sha1($pw);
+						$pw = sha1($email.$pw);
 						$activation_hash = sha1(uniqid(mt_rand(), true));
 						$pwreset_hash = sha1(uniqid(mt_rand(), true));
 						$stmt = $db->prepare("INSERT INTO cip_user(email, name, surname, matrikelnr, password, activation_hash, pwreset_hash)
@@ -293,7 +294,6 @@
 			$db = db_connect();
 			if ($db)
 			{
-
 				try
 				{
 					$stmt = $db->prepare("SELECT email, name, surname, matrikelnr, active, role FROM cip_user WHERE 	id= :user_id");
@@ -383,18 +383,20 @@
 			{
 				try
 				{
-					$stmt = $db->prepare('SELECT password FROM cip_user WHERE id = :user_id');
+					$stmt = $db->prepare('SELECT email, password FROM cip_user WHERE id = :user_id');
 					$stmt->bindParam(':user_id', $user_id);
 					$stmt->execute();
-					$table_pw = $stmt->fetch(PDO::FETCH_NUM)[0];
-					if ($table_pw != sha1($cur_pw))
+					$fetchResult = $stmt->fetch(PDO::FETCH_NUM);
+					var_dump($table_email);
+					var_dump($table_pw);
+					if ($fetchResult[1] != sha1($fetchResult[0].$cur_pw))
 					{
 						$db = 0;
 						return -1;
 					}
 					else
 					{
-						$new_pw = sha1($new_pw);
+						$new_pw = sha1($fetchResult[0].$new_pw);
 						$stmt = $db->prepare("UPDATE cip_user
 											  SET password = :new_pw
 											  WHERE id = :user_id");
@@ -439,7 +441,11 @@
 			{
 				try
 				{
-					$new_pw = sha1($new_pw);
+					$stmt = $db->prepare('SELECT email FROM cip_user WHERE id = :user_id');
+					$stmt->bindParam(':user_id', $user_id);
+					$stmt->execute();
+					$table_email = $stmt->fetch(PDO::FETCH_NUM)[0];
+					$new_pw = sha1($table_email.$new_pw);
 					$pwreset_hash = sha1(uniqid(mt_rand(), true));
 					$stmt = $db->prepare("UPDATE cip_user
 										SET password = :new_pw, pwreset_hash = :pwreset_hash

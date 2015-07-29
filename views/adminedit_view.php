@@ -12,7 +12,7 @@ else if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET["id"]))
 {
 	?>
 	<form action="adminedit.php" method="post">         
-            <fieldset>
+            <fieldset style="width:20%">
                 <legend>User info</legend>
                 <input type="hidden" name="id" value=<?php echo $_GET['id'] ?>>
                 <label>Email: <input type="email" name="email" value="<?php echo $userinfo['email'] ?>"></label><br>
