@@ -22,7 +22,10 @@
         input[type=submit],
         input[type=email] {
             display: block;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+        }
+        input[type="number"] {
+            width:30px;
         }
         input[type=checkbox] {
             margin-bottom: 15px;

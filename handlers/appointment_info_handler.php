@@ -30,10 +30,17 @@ if ($_SESSION['loggedin'] == true)
 			if ($appointmentinfo == -1)
 			{
 				$homeworkinfo = $homework->getHomeworkInfoNoSolution($_GET["h"]);
-				$homeworklocations = $homework->getHomeworkLocations($_GET["h"]);
-				foreach ($homeworklocations as $key => $value)
+				if ($homeworkinfo["end"] >= date ("Y-m-d", time()))
 				{
-					$homeworklocations[$key]["freeslots"]=$appointment->countFreeSlotOnLocationBetweenDates($value["location_id"],$homeworkinfo["start"], $homeworkinfo["end"]);
+					$homeworklocations = $homework->getHomeworkLocations($_GET["h"]);
+					foreach ($homeworklocations as $key => $value)
+					{
+						$homeworklocations[$key]["freeslots"]=$appointment->countFreeSlotOnLocationBetweenDates($value["location_id"],$homeworkinfo["start"], $homeworkinfo["end"]);
+					}
+				}
+				else 
+				{
+					$homeworklocations = 0;
 				}
 			}
 			else
@@ -48,12 +55,12 @@ if ($_SESSION['loggedin'] == true)
 	}
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
-		if (isset($_POST["loc"]) && ($appointment->userHomeworkAppointment($_SESSION['user'], $_POST["h"]) != -1) )						///work for different sequential pages, when you choose timeslot
+		$appointment = new appointment();
+		$homework = new homework();
+		$homeworkinfo = $homework->getHomeworkInfoNoSolution($_POST["h"]);
+		if (isset($_POST["loc"]) && ($appointment->userHomeworkAppointment($_SESSION['user'], $_POST["h"]) == -1) )						///work for different sequential pages, when you choose timeslot
 		{
-			$appointment = new appointment();
-			$homework = new homework();
 			$location = new location();
-			$homeworkinfo = $homework->getHomeworkInfoNoSolution($_POST["h"]);
 			$homeworklocations = $homework->getHomeworkLocations($_POST["h"]);
 			if (isset($_POST['day']))
 			{
@@ -82,7 +89,7 @@ if ($_SESSION['loggedin'] == true)
 					foreach ($homeworklocations as $key1 => $value1) {
 						if ($value1["location_id"] == $_POST["loc"])							// is location right?
 						{
-							if ($_POST["day"] >= $homeworkinfo["start"] && $_POST["day"] <= $homeworkinfo["end"])	// is the day between the legal borders?
+							if ($_POST["day"] >= $homeworkinfo["start"] && $_POST["day"] <= $homeworkinfo["end"] && $_POST["day"] >= date ("Y-m-d", time()))	// is the day between the legal borders?
 							{
 								foreach ($workingHoursOnDay as $key2 => $value2) {
 									if ($_POST["t"] > $value2["open_time"] && $_POST["t"] < $value2["close_time"])	// is time set on working hours?
@@ -136,10 +143,7 @@ if ($_SESSION['loggedin'] == true)
 		{
 			$codeGivenError = "";
 			$_POST['code'] = trim($_POST['code']);
-			$appointment = new appointment();
-			$homework = new homework();
 			$location = new location();
-			$homeworkinfo = $homework->getHomeworkInfoNoSolution($_POST["h"]);
 			$homeworklocations = $homework->getHomeworkLocations($_POST["h"]);
 			$app_info = $appointment->searchAppointmentByCode($_POST["h"], $_POST["code"]);
 			if ($appointment->userHomeworkAppointment($_SESSION['user'], $_POST["h"]) == -1)
@@ -175,10 +179,7 @@ if ($_SESSION['loggedin'] == true)
 		else if (isset($_POST["codeConfirmed"]))
 		{
 			$codeConfirmed = "";
-			$appointment = new appointment();
-			$homework = new homework();
 			$location = new location();
-			$homeworkinfo = $homework->getHomeworkInfoNoSolution($_POST["h"]);
 			$homeworklocations = $homework->getHomeworkLocations($_POST["h"]);
 			$app_info = $appointment->searchAppointmentByCode($_POST["h"], $_POST["code"]);
 			if ($appointment->userHomeworkAppointment($_SESSION['user'], $_POST["h"]) == -1)

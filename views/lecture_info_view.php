@@ -40,7 +40,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['id']))
 			} 
 			if ($noappointment)
 			{
-				echo "<td><a href='appointment_info.php?h=".$allhomeworks[$key]['id']."'>Register</a></td><td>N/A</td>";
+				if ($allhomeworks[$key]["end"]>= date("Y-m-d", time()))
+				{
+					echo "<td><a href='appointment_info.php?h=".$allhomeworks[$key]['id']."'>Register</a></td><td>N/A</td>";
+				}
+				else
+				{
+					echo "<td>Registration closed</td><td>N/A</td>";
+				}
 			}
 			?>
 		<tr>

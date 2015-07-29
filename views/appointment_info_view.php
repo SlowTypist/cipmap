@@ -39,28 +39,31 @@ else if ($appointmentinfo == -1 || isset($_POST['loc']))
 	<?php
 	if (!isset($_POST['loc']))
 	{?>
-		<form action ="appointment_info.php" method="post">
-		<fieldset style="width:25%">
-		<legend><b>Choose location:</b></legend>
-		<input type="hidden" name="h" value="<?php echo $_GET['h'] ?>">
-		<table border="1">
-		<tr><td><b>Location</b></td><td><b>Number of available slots<b></td><td></td></tr>
-		<?php
-		foreach ($homeworklocations as $key => $value)
-		{
-			echo "<tr><td>".$value["name"]."</td><td>".$value["freeslots"]."</td><td><input type='radio' name='loc' value=".$value["location_id"]." required></td></tr>";
-		}
-		?>
-		</table><input type="submit" name="chosenLocation" value="Choose day"></fieldset></form>
-		<br><br><b>Or put the appointment code in:</b><br>
-		<form action ="appointment_info.php" method="post">
-		<fieldset style="width:25%">
-		<legend><b>Code</b></legend>
-		<input type="hidden" name="h" value="<?php echo $_GET['h'] ?>">
-		<input type="text" name="code" value="" size ="50" required />
-		<input type="submit" name="codeGiven" value="Enter Code">
-		</fieldset>
-		</form>
+		<?php if ($homeworklocations != 0):?>
+			<form action ="appointment_info.php" method="post">
+			<fieldset style="width:25%">
+			<legend><b>Choose location:</b></legend>
+			<input type="hidden" name="h" value="<?php echo $_GET['h'] ?>">
+			<table border="1">
+			<tr><td><b>Location</b></td><td><b>Number of available slots<b></td><td></td></tr>
+			<?php
+			foreach ($homeworklocations as $key => $value)
+			{
+				echo "<tr><td>".$value["name"]."</td><td>".$value["freeslots"]."</td><td><input type='radio' name='loc' value=".$value["location_id"]." required></td></tr>";
+			}
+			?>
+			</table><input type="submit" name="chosenLocation" value="Choose day"></fieldset></form>
+			<form action ="appointment_info.php" method="post">
+			<fieldset style="width:25%">
+			<legend><b>Or put the appointment code in:</b></legend>
+			<input type="hidden" name="h" value="<?php echo $_GET['h'] ?>">
+			<input type="text" name="code" value="" size ="50" required />
+			<input type="submit" name="codeGiven" value="Enter Code">
+			</fieldset>
+			</form>
+		<?php else:?>
+			<br><b>Submissions of this homework are over</b>
+		<?php endif;?>
 		<?php
 	}
 	else
@@ -75,7 +78,7 @@ else if ($appointmentinfo == -1 || isset($_POST['loc']))
 			}
 		}
 		if (!isset($_POST["day"]))
-		{ ?>
+		{?>
 			<br><b>Choose day:</b><br>
 			<form action ="appointment_info.php" method="post">
 			<input type="hidden" name="h" value="<?php echo $_POST['h'] ?>">
@@ -84,7 +87,7 @@ else if ($appointmentinfo == -1 || isset($_POST['loc']))
 			<tr><td><b>Day</b></td><td><b>Number of available slots<b></td><td></td></tr>
 			<?php
 			foreach ($availableDays as $key => $value) {
-				echo "<tr><td>".date ("D d M Y", strtotime($value["day"]))."</td><td>".$value["slots"]."</td><td><input type='radio' name='day' value=".date ("Y-m-d", strtotime($value["day"]))." required></td></tr>";
+				echo "<tr><td>".date ("D d M Y", strtotime($availableDays[$key]["day"]))."</td><td>".$availableDays[$key]["slots"]."</td><td><input type='radio' name='day' value=".date ("Y-m-d", strtotime($availableDays[$key]["day"]))." required></td></tr>";
 			}
 			?>
  			</table><input type="submit" name="chosenDay" value="Choose timeslot"></form>

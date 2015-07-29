@@ -1,7 +1,7 @@
 <?php include('_header.php'); ?> 
 
 <?php echo $registerresult?><br>
-<?php if ($_SERVER['REQUEST_METHOD'] != 'POST') {?>
+<?php if ($_SERVER['REQUEST_METHOD'] == 'GET') {?>
 <form action="register.php" method="post">         
             <fieldset>
                 <legend>Register</legend>
