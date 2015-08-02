@@ -1,50 +1,31 @@
 <?php
 	include_once(dirname(__DIR__).'/config/config.php');
 	include_once dirname(__FILE__).'/db.php';
+	require_once(dirname(__DIR__).'/model/User.php');
 	include_once(dirname(__DIR__).'/libraries/PHPMailer.php');
 	class user
 	{
 		public function login($email, $pw)
 		{
-			$db = db_connect();
-			if ($db)
-			{
-				try
-				{
-					$email = trim($email);
-					$stmt = $db->prepare("SELECT id, password, active, role FROM cip_user WHERE email= :email");
-					$stmt->bindParam(':email', $email);
-					$stmt->execute();
-					$db = null;
-					$result = $stmt->fetch(PDO::FETCH_ASSOC);
-					if ($result && $result["password"] == sha1($email.$pw))
-					{
-						if($result["active"])
-						{
-							$out['id'] = $result["id"];
-							$out['role'] = $result["role"];
-							return($out);
-						}
-						else
-						{
-							return -2;	//return unactive
-						}
-					}
-					else
-					{
-						return -1; //return wrong password or no such user
-					}
-				}
-				catch (PDOException $e)
-				{
 
-					$db = null;
-					return 0;		//db error
-				}
-			}
-			else
-			{
-				return 0;		//db error
+			$user = new User();
+			$user->email = $email;
+			$user->password = $pw;
+
+			$result = $user->getByEmail();
+			if($result["id"] > 0) {
+
+				$_SESSION['loggedin'] = true;
+				$_SESSION['user'] = $result["id"];
+				$_SESSION['role'] = $result["role"];
+				$_SESSION['LAST_ACTIVITY'] = time();
+				header('Location: index.php');
+			} else if($result == -1) {
+				$loginerror = "Wrong email or password";
+			} else if($result == -2) {
+				$loginerror =  "Account not activated yet. Please confirm your account with a link sent to your email";
+			} else {
+				$loginerror =  "System error";
 			}
 
 		}

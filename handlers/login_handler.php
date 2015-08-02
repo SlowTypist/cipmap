@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			$_SESSION['LAST_ACTIVITY'] = time();
 			header('Location: index.php');
 		}
-		else if($result == -1) 
+		else if($result == -1)
 		{
 			$loginerror = "Wrong email or password";
 		}

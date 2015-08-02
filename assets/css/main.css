@@ -1,0 +1,12 @@
+.header-h1 {
+    margin: 0px !important;
+    margin-bottom: 0px !important;
+    padding: 30px !important;
+    color: #ffffff !important;
+    background-image: url(../img/logo.png);
+    background-repeat: no-repeat !important;
+    background-position: right !important;
+    background-color: #004291 !important;
+    text-shadow: 2px 4px 6px rgba(0,0,0,1), 0px -5px 35px rgba(255,255,255,0.7) !important;
+}
+

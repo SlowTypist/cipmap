@@ -1,12 +1,24 @@
 <?php
+require_once("./includes/auth.php");
 require_once("./header.php");
 require_once('config/config.php');
+require_once("./controller/UserController.php");
 
-$template = $twig->loadTemplate('index.html');
-echo $template->render(array('title' => 'Login page', 'go' => 'here'));
+$error_msg = null;
+$template_variables = array('title' => 'Login page');
+if($_POST["action"] == "Login") {
+    $userController = new UserController();
+    $result = $userController->login();
+    $template_variables["error_msg"] = $result;
+}
 
-require_once('includes/user.php');
-include('handlers/login_handler.php');
+
+$template = $twig->loadTemplate('auth/login.html');
+echo $template->render($template_variables);
+
+
+//require_once('includes/user.php');
+//include('handlers/login_handler.php');
 //include("views/login_view.php");
 ?> 
 
