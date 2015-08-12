@@ -1,0 +1,57 @@
+{% include 'header.html' %}
+<body>
+
+<div class="container">
+
+    <form role="form-horizontal"  method="post" action="register.php" name="loginform">
+        <legend>Register</legend>
+        <!-- email -->
+        <div class="form-group">
+            <label for="email">E-mail:</label>
+            <input id="email" type="email" name="email" class="form-control" value="@uni-bonn.de" required />
+            <label>Only uni-bonn.de email accounts are allowed</label>
+        </div>
+        <!-- first name -->
+        <div class="form-group">
+            <label for="name">First name:</label>
+            <input id="name" type="text" name="name" class="form-control" autocomplete="off" required />
+        </div>
+        <!-- last name -->
+        <div class="form-group">
+            <label for="surname">Last name:</label>
+            <input id="surname" type="text" name="surname" class="form-control" autocomplete="off" required />
+        </div>
+        <!-- matriculation number -->
+        <div class="form-group">
+            <label for="matrnr">Matriculation number:</label>
+            <input id="matrnr" type="text" name="matrnr" class="form-control" autocomplete="off" required />
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+            <label for="pw">Password:</label>
+            <input id="pw" type="password" name="pw" class="form-control" autocomplete="off" required />
+        </div>
+
+        <!-- Repeat Password -->
+        <div class="form-group">
+            <label for="pw_repeat">Password:</label>
+            <input id="pw_repeat" type="password" name="pw_repeat" class="form-control" autocomplete="off" required />
+        </div>
+
+        <input type="submit" name="action" value="Register"  class="btn btn-default"/>
+    </form>
+
+    <br/>
+    {% if error_msg %}
+    <div class="alert alert-danger" role="alert">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Error:</span>
+        {{ error_msg }}
+    </div>
+    {% endif %}
+
+    <a href="login.php">Login</a><br>
+</div>
+</body>
+</html>

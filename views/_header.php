@@ -31,9 +31,7 @@
             margin-bottom: 15px;
         }
     </style>
-    <link rel="icon" 
-      type="image/png" 
-      href="http://www3.uni-bonn.de/favicon.ico">
+
 </head>
 <body>
 
