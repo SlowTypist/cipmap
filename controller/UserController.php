@@ -28,6 +28,7 @@ class UserController {
                     $_SESSION['loggedin'] = true;
                     $_SESSION['user'] = $user->id;
                     $_SESSION['role'] = $user->role;
+                    $_SESSION['email'] = $user->email;
                     $_SESSION['LAST_ACTIVITY'] = time();
 
                     header("Location: login.php");
@@ -164,41 +165,28 @@ class UserController {
 
 
     }
-    public function sendForgot($email){
-        $db = db_connect();
-        if ($db) {
-            try {
-                $stmt = $db->prepare("SELECT id, pwreset_hash, active FROM cip_user WHERE email= :email");
-                $stmt->bindParam(':email', $email);
-                $stmt->execute();
-                $result = $stmt->fetch(PDO::FETCH_ASSOC);
-                if ($result) {
-                    if($result["active"]) {
-                        if($this->sendForgotEmail($result['id'], $email, $result["pwreset_hash"])){
-                            $db = null;
-                            return 1;
-                        }
-                        else {
-                            $db = null;
-                            return -4;
-                        }
-                    }
-                    else {
-                        return -2;	//return unactive
-                    }
-                }
-                else {
-                    return -1; //no such user
-                }
-            }
-            catch (PDOException $e) {
-                $db = null;
-                return -3;		//db error
-            }
+    public function forgot(){
+        $user = new User();
+        $user->email = trim($_POST['email']);
+
+        $user->getByEmail();
+
+        if($user->id == -1){
+            return "Database error";
         }
-        else {
-            return -3;		//db error
+        if ($user->id == 0){
+            return "No such user";
         }
+        if ($user->active == 0){
+            return "Account is not active";
+        }
+        if ($this->sendForgotEmail($user->id, $user->email, $user->pwreset_hash)){
+            return "Reset link send. Please check your e-mail";
+        }
+        else{
+            return "E-mail wasn't sent. Please contact tutors";
+        }
+
     }
     public function sendForgotEmail($user_id, $email, $pwreset_hash)
     {
@@ -229,61 +217,61 @@ class UserController {
         }
     }
 
-    public function verifyPasswordResetLink($user_id, $pwresethash){
-        $db = db_connect();
-        if ($db) {
-            try {
-                $stmt = $db->prepare("SELECT pwreset_hash FROM cip_user WHERE id= :user_id");
-                $stmt->bindParam(':user_id', $user_id);
-                $stmt->execute();
-                $db = null;
-                $result = $stmt->fetch(PDO::FETCH_NUM);
-                if ($result[0] == $pwresethash) {
-                    return 1;
+    public function verifyPasswordResetLink(){
+        $verifyresult = null;
+        $user = new User();
+        $user->id = $_GET['id'];
+        $user->get();
+        if ($user->id == $_GET['id']){
+            if ($user->pwreset_hash == $_GET['verification_code']){
+                if ($user->active == 1){
+                        $verifyresult = 1;
                 }
                 else {
-                    return -1; //something wrong
+                    $verifyresult = "Account is not active";
                 }
             }
-            catch (PDOException $e) {
-                    $db = null;
-                    return 0;		//db error
+            else{
+                $verifyresult = "Wrong reset code";
             }
         }
         else{
-            return 0;
+            $verifyresult = "No such user";
         }
+        return $verifyresult;
     }
-    public function getUserInformation($user_id)
-    {
-        $db = db_connect();
-        if ($db){
-            try{
-                $stmt = $db->prepare("SELECT email, name, surname, matrikelnr, active, role FROM cip_user WHERE 	id= :user_id");
-                $stmt->bindParam(':user_id', $user_id);
-                $stmt->execute();
-                $db = null;
-                $result = $stmt->fetch(PDO::FETCH_ASSOC);
-                if ($result) {
-                    return $result;
-                    $db = null;
-                }
-                else {
-                    $db = null;
-                    return -1; //something wrong
-                }
-            }
-            catch (PDOException $e) {
-                    $db = null;
-                    return 0;		//db error
-            }
+    public function resetPassword (){
+        if ($_POST['new_pw'] != $_POST['new_pw_repeat']) {
+            return "Passwords don't match. Please try again";
         }
-        else {
-            return 0;		//db error
+        if (empty($_POST['new_pw'])){
+            return "You didn't enter new password";
         }
-    }
+        if (strlen($_POST['new_pw']) < 6) {
+            return "Password must be at least 6 characters long";
+        }
 
-        public function changePassword($user_id, $cur_pw, $new_pw, $new_pw_repeat)
+        $user = new User();
+        $user->id = $_POST['id'];
+
+        $user->get();
+        if ($user->id != $_POST["id"]){
+            return "No such user";
+        }
+        $user->password = sha1($user->email.$_POST['new_pw']);
+        $user->pwreset_hash = sha1(uniqid(mt_rand(), true));
+
+        $user->update();
+
+        if ($user->id == $_POST['id']){
+            return "Password successfully changed";
+        }
+        else{
+            return "Error occurred. Please contact tutors";
+        }
+
+    }
+   public function changePassword($user_id, $cur_pw, $new_pw, $new_pw_repeat)
             //1 success, 0 db problem, -1 wrong current password, -2 wrong repeat, -3 new password is empty -4 new password is too short
         {
             if ($new_pw != $new_pw_repeat)
@@ -342,62 +330,34 @@ class UserController {
             }
 
         }
-        public function resetPassword ($user_id, $new_pw, $new_pw_repeat)
-            //1 success, 0 - db problem, -1 passwords don't match, -2 password field is empty, -3 password is too short
-        {
-            if ($new_pw != $new_pw_repeat)
-            {
-                return -1;
+    public function getUserInformation($user_id){
+    $db = db_connect();
+    if ($db){
+        try{
+            $stmt = $db->prepare("SELECT email, name, surname, matrikelnr, active, role FROM cip_user WHERE 	id= :user_id");
+            $stmt->bindParam(':user_id', $user_id);
+            $stmt->execute();
+            $db = null;
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($result) {
+                return $result;
+                $db = null;
             }
-            if (empty($new_pw))
-            {
-                return -2;
+            else {
+                $db = null;
+                return -1; //something wrong
             }
-            elseif (strlen($new_pw) < 6)
-            {
-                return -3;
-            }
-            $db = db_connect();
-            if ($db)
-            {
-                try
-                {
-                    $stmt = $db->prepare('SELECT email FROM cip_user WHERE id = :user_id');
-                    $stmt->bindParam(':user_id', $user_id);
-                    $stmt->execute();
-                    $table_email = $stmt->fetch(PDO::FETCH_NUM)[0];
-                    $new_pw = sha1($table_email.$new_pw);
-                    $pwreset_hash = sha1(uniqid(mt_rand(), true));
-                    $stmt = $db->prepare("UPDATE cip_user
-										SET password = :new_pw, pwreset_hash = :pwreset_hash
-										WHERE id = :user_id");
-                    $stmt->bindParam(':user_id', $user_id);
-                    $stmt->bindParam(':new_pw', $new_pw);
-                    $stmt->bindParam(':pwreset_hash', $pwreset_hash);
-                    $stmt->execute();
-                    if ($stmt)
-                    {
-                        return 1;
-                    }
-                    else
-                    {
-                        return 0;
-                    }
-
-                }
-                catch (PDOException $e)
-                {
-                    $db = 0;
-                    return 0;
-                }
-
-            }
-            else
-            {
-                return 0;
-            }
-
         }
+        catch (PDOException $e) {
+            $db = null;
+            return 0;		//db error
+        }
+    }
+    else {
+        return 0;		//db error
+    }
+}
+
         public function listAllUsers()
         {
             $db = db_connect();

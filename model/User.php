@@ -73,11 +73,10 @@ class User{
                 $stmt->bindParam(':activation_hash', $this->activation_hash);
                 $stmt->bindParam(':pwreset_hash', $this->pwreset_hash);
                 $stmt->bindParam(':role', $this->role);
+
                 $stmt->execute();
 
-                if ($stmt->rowCount() < 1)
-                {
-                    echo "AAAAAA";
+                if ($stmt->rowCount() < 1){
                     $this->id = 0;
                 }
             }
@@ -96,7 +95,7 @@ class User{
         $db = db_connect();
         if ($db){
             try{
-                $stmt = $db->prepare("SELECT id,name,surname, matrikelnr, password, active,activation_hash, pwreset_hash, role FROM cip_user WHERE id = :id");
+                $stmt = $db->prepare("SELECT id,email,name,surname, matrikelnr, password, active,activation_hash, pwreset_hash, role FROM cip_user WHERE id = :id");
                 $stmt->bindParam(':id', $this->id);
                 $stmt->execute();
                 // fetching the result
@@ -104,6 +103,7 @@ class User{
 
                 if (!empty($result)) {
                     $this->id = $result["id"];
+                    $this->email = $result["email"];
                     $this->name = $result['name'];
                     $this->surname = $result['surname'];
                     $this->matrikelnr = $result['matrikelnr'];
