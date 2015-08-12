@@ -53,34 +53,62 @@ class UserController {
 
 
     public function register(){
-        $registererror = null;
+
+        $result = array();
+
         $_POST['email'] = trim($_POST['email']);
         //validate data
-        if (empty($_POST['surname']) || empty($_POST['name']) || empty($_POST['matrnr']) || empty($_POST['email']) || empty($_POST['pw']) || empty($_POST['pw_repeat'])){
-            $registererror = "All fields must be filled";
+        if (empty($_POST['surname']) ||
+            empty($_POST['name']) ||
+            empty($_POST['matrnr']) ||
+            empty($_POST['email']) ||
+            empty($_POST['pw']) ||
+            empty($_POST['pw_repeat'])) {
+
+            $result["type"] = "error";
+            $result["message"] = "All fields must be filled";
+
+        } elseif ($_POST['pw'] !== $_POST['pw_repeat']) {
+
+            $result["type"] = "error";
+            $result["message"] = "Passwords don't match";
+
+        } elseif (strlen($_POST['pw']) < 6) {
+
+            $result["type"] = "error";
+            $result["message"] = "Passwords is too short";
+
+        } elseif (strlen($_POST['matrnr']) != 7 || !is_numeric($_POST['matrnr'])) {
+
+            $result["type"] = "error";
+            $result["message"] = "Matriculation number must contain seven digits";
+
+        } elseif (strlen($_POST['email']) > 64 ||
+                    !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL) ||
+                    !preg_match("/uni-bonn.de/",$_POST['email'])) {
+
+            $result["type"] = "error";
+            $result["message"] = "Please enter correct e-mail";
         }
-        elseif ($_POST['pw'] !== $_POST['pw_repeat']){
-            $registererror = "Passwords don't match";
+
+        if(isset($result["type"])) {
+            return $result;
         }
-        elseif (strlen($_POST['pw']) < 6){
-            $registererror = "Passwords is too short";
-        }
-        elseif (strlen($_POST['matrnr']) != 7 || !is_numeric($_POST['matrnr'])){
-            $registererror = "Matriculation number must contain seven digits";
-        }
-        elseif (strlen($_POST['email']) > 64 || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL) || !preg_match("/uni-bonn.de/",$_POST['email'])) {
-            $registererror = "Please enter correct e-mail";
-        }
+
 
         $user = new User();
         $user->email = $_POST['email'];
         $user->getByEmail();
-        if ($user->id != 0){
-            $registererror = "Such e-mail is already registered";
+
+        if ($user->id != 0) {
+            $result["type"] = "error";
+            $result["message"] = "Such e-mail is already registered";
         }
-        if (!empty($registererror)){
-            return $registererror;
+
+        if(isset($result["type"])) {
+            return $result;
         }
+
         $user->name = $_POST['name'];
         $user->surname = $_POST['surname'];
         $user->matrikelnr = $_POST['matrnr'];
@@ -89,21 +117,24 @@ class UserController {
         $user->pwreset_hash = sha1(uniqid(mt_rand(), true));
 
         $user->save();
-        if ($user->id > 0){
-            if (! ($this->sendVerificationEmail($user->id, $user->email, $user->activation_hash)))
-            {
-                $registererror = "Sending verification mail was unsuccessful. Please contact tutors";
+
+        if ($user->id > 0) {
+            if (! ($this->sendVerificationEmail($user->id, $user->email, $user->activation_hash))) {
+                $result["type"] = "error";
+                $result["message"] = "Sending verification mail was unsuccessful. Please contact tutors";
             }
-        }
-        else{
-            $registererror = "Database error";
+        } else {
+            $result["type"] = "error";
+            $result["message"] = "Database error";
         }
 
-        if (!empty($registererror)){
-            return $registererror;
+        if(isset($result["type"])) {
+            return $result;
         }
         else{
-            return "Successful registration. Please check your e-mail for activation link";
+            $result["type"] = "success";
+            $result["message"] = "Successful registration. Please check your e-mail for activation link";
+            return $result;
         }
     }
 

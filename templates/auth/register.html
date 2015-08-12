@@ -8,23 +8,23 @@
         <!-- email -->
         <div class="form-group">
             <label for="email">E-mail:</label>
-            <input id="email" type="email" name="email" class="form-control" value="@uni-bonn.de" required />
+            <input id="email" type="email" name="email" class="form-control" value="{{email}}" required />
             <label>Only uni-bonn.de email accounts are allowed</label>
         </div>
         <!-- first name -->
         <div class="form-group">
             <label for="name">First name:</label>
-            <input id="name" type="text" name="name" class="form-control" autocomplete="off" required />
+            <input id="name" value="{{name}}" type="text" name="name" class="form-control" autocomplete="off" required />
         </div>
         <!-- last name -->
         <div class="form-group">
             <label for="surname">Last name:</label>
-            <input id="surname" type="text" name="surname" class="form-control" autocomplete="off" required />
+            <input id="surname" value="{{surname}}" type="text" name="surname" class="form-control" autocomplete="off" required />
         </div>
         <!-- matriculation number -->
         <div class="form-group">
             <label for="matrnr">Matriculation number:</label>
-            <input id="matrnr" type="text" name="matrnr" class="form-control" autocomplete="off" required />
+            <input id="matrnr" value="{{matrnr}}" type="text" name="matrnr" class="form-control" autocomplete="off" required />
         </div>
 
         <!-- Password -->
@@ -43,11 +43,17 @@
     </form>
 
     <br/>
-    {% if error_msg %}
+    {% if type == "error" %}
     <div class="alert alert-danger" role="alert">
         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
         <span class="sr-only">Error:</span>
-        {{ error_msg }}
+        {{ message }}
+    </div>
+    {% elseif type == "success" %}
+    <div class="alert alert-success" role="alert">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Error:</span>
+        {{ message }}
     </div>
     {% endif %}
 
