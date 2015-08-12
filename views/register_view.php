@@ -1,6 +1,6 @@
 <?php include('_header.php'); ?> 
 
-<?php echo $registerresult?><br>
+<?php echo $result?><br>
 <?php if ($_SERVER['REQUEST_METHOD'] == 'GET') {?>
 <form action="register.php" method="post">         
             <fieldset>
@@ -11,7 +11,7 @@
                 <label>Matrikelnr.: <input type="text" name="matrnr" value=""/></label>
                 <label>Password: <input type="password" name="pw"/></label>
                 <label>Repeat password: <input type="password" name="pw_repeat" value=""/></label>
-                <input type="submit" name="Register" value="Register" />
+                <input type="submit" name="action" value="Register" />
             </fieldset>
         </form>
 <?php }?>

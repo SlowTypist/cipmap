@@ -8,11 +8,11 @@
  */
 session_start();
 $_SESSION['LAST_ACTIVITY'] = time();
-
+//var_dump($_SESSION);
 if( isset($_SESSION['role'])){
     if ($_SESSION['role'] == 0)
     {
-        header('Location: student1.php');
+        header('Location: home.php');
     }
     if ($_SESSION['role'] == 1)
     {

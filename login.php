@@ -1,9 +1,7 @@
 <?php
 require_once("./includes/auth.php");
 require_once("./header.php");
-require_once('config/config.php');
 require_once("./controller/UserController.php");
-
 $error_msg = null;
 $template_variables = array('title' => 'Login page');
 if($_POST["action"] == "Login") {
@@ -12,13 +10,7 @@ if($_POST["action"] == "Login") {
     $template_variables["error_msg"] = $result;
 }
 
-
 $template = $twig->loadTemplate('auth/login.html');
 echo $template->render($template_variables);
-
-
-//require_once('includes/user.php');
-//include('handlers/login_handler.php');
-//include("views/login_view.php");
 ?> 
 

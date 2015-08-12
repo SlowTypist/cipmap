@@ -3,7 +3,7 @@
 	include_once dirname(__FILE__).'/db.php';
 	require_once(dirname(__DIR__).'/model/User.php');
 	include_once(dirname(__DIR__).'/libraries/PHPMailer.php');
-	class user
+	class user_old
 	{
 		public function login($email, $pw)
 		{
