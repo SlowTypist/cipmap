@@ -10,6 +10,16 @@
 require_once(dirname(__DIR__).'/model/WorkingHours.php');
 require_once(dirname(__DIR__).'/model/WorkingHoursList.php');
 class WorkingHoursController{
+    public function getWorkingHoursOnLocationOnDay($location_id, $day){
+        $workingHoursList = new WorkingHoursList();
+        $workingHoursList->location_id = $location_id;
+        $workingHoursList->day = $day;
+
+        $workingHoursList->getAllFromLocationFromDay();
+
+        return $workingHoursList->list;
+
+    }
 
 
     public function countFreeSlotOnLocationBetweenDates($location_id, $start, $end){

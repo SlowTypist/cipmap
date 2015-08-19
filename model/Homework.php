@@ -22,10 +22,9 @@ class Homework{
         if ($db){
             try{
                 $stmt = $db->prepare("INSERT INTO cip_homework
-                                      (id, name, lecture_id, start, end, max_points, link_task, link_solution)
+                                      (name, lecture_id, start, end, max_points, link_task, link_solution)
                                       VALUES
-                                      (:id, :name, :lecture_id, :start, :end, :max_points, :link_task, :link_solution)");
-                $stmt->bindParam(':id', $this->id);
+                                      (:name, :lecture_id, :start, :end, :max_points, :link_task, :link_solution)");
                 $stmt->bindParam(':name', $this->name);
                 $stmt->bindParam(':lecture_id', $this->lecture_id);
                 $stmt->bindParam(':start', $this->start);

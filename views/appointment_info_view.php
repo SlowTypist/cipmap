@@ -106,6 +106,77 @@ elseif($_POST['action'] == 'Choose day'):?>
     </form>
 
     <a href=lecture_info.php?id=<?php echo $lectureInfo->id;?>>Back to lecture</a><br>
+    <?php
+elseif ($_POST['action'] == 'Choose timeslot'):?>
+    <b>Lecture:</b><?php echo $lectureInfo->name;?>
+    <b> Teacher: </b><?php echo $lectureInfo->teacher?><br>
+    <b>Maximum group size:</b> <?php echo $lectureInfo->max_group_size;?>
+    <br><b>Homework name: </b><?php echo $homeworkInfo->name?>
+    <b>Start date: </b><?php echo date("d M Y", strtotime($homeworkInfo->start))?>
+    <b>End date: </b><?php echo date("d M Y", strtotime($homeworkInfo->end))?>
+
+    <br><b>Location: </b><?php echo $locationInfo->name;?>
+    <br><b>Day: </b><?php echo date("D d M Y", strtotime($_POST["day"]))?>
+
+    <form action ="appointment_info.php" method="post">
+        <fieldset style="width:25%">
+            <legend><b>Choose timeslot:</b></legend>
+            <input type="hidden" name="h" value="<?php echo $_POST['h'] ?>">
+            <input type="hidden" name="location_id" value="<?php echo $_POST['location_id'] ?>">
+            <input type="hidden" name="day" value="<?php echo $_POST['day'] ?>">
+            <table border="1">
+                <tr>
+                    <td><b>Timeslot</b></td>
+                    <td></td>
+                </tr>
+                <?php
+                foreach ($availableTimeslots as $key => $value){
+                    echo "
+                <tr>
+                    <td>".date ("H:i:s", strtotime($value))."</td>
+                    <td><input type='radio' name='time' value=".date ("H:i:s", strtotime($value))." required></td>
+                </tr>";
+                }
+                ?>
+            </table>
+            <input type="submit" name="action" value="Continue">
+        </fieldset>
+    </form>
+    <?php
+elseif($_POST['action'] == 'Continue'):?>
+    <b>Lecture:</b><?php echo $lectureInfo->name;?>
+    <b> Teacher: </b><?php echo $lectureInfo->teacher?><br>
+    <b>Maximum group size:</b> <?php echo $lectureInfo->max_group_size;?>
+    <br><b>Homework name: </b><?php echo $homeworkInfo->name?>
+    <b>Start date: </b><?php echo date("d M Y", strtotime($homeworkInfo->start))?>
+    <b>End date: </b><?php echo date("d M Y", strtotime($homeworkInfo->end))?>
+
+    <br><br><b>Location: </b><?php echo $locationInfo->name;?>
+    <br><b>Day: </b><?php echo date("D d M Y", strtotime($_POST["day"]))?>
+    <br><b>Timeslot:</b><?php echo $_POST["time"];?>
+
+    <form action ="appointment_info.php" method="post">
+        <input type="hidden" name="h" value="<?php echo $_POST['h'] ?>">
+        <input type="hidden" name="location_id" value="<?php echo $_POST['location_id'] ?>">
+        <input type="hidden" name="day" value="<?php echo $_POST['day'] ?>">
+        <input type="hidden" name="time" value="<?php echo $_POST['time'] ?>">
+        <input type="submit" name="action" value="Confirm your appointment">
+    </form>
+
+    <a href=lecture_info.php?id=<?php echo $lectureInfo->id;?>>Back to lecture</a><br>
+    <?php
+elseif($_POST['action'] == 'Confirm your appointment'):
+    ?>
+    <b>Lecture:</b><?php echo $lectureInfo->name;?>
+    <b> Teacher: </b><?php echo $lectureInfo->teacher?><br>
+    <b>Maximum group size:</b> <?php echo $lectureInfo->max_group_size;?>
+    <br><b>Homework name: </b><?php echo $homeworkInfo->name?>
+    <b>Start date: </b><?php echo date("d M Y", strtotime($homeworkInfo->start))?>
+    <b>End date: </b><?php echo date("d M Y", strtotime($homeworkInfo->end))?>
+
+    <br><br><b>Location: </b><?php echo $locationInfo->name;?>
+    <br><b>Day: </b><?php echo date("D d M Y", strtotime($_POST["day"]))?>
+    <br><b>Timeslot:</b><?php echo $_POST["time"];?>
+
 <?php endif;
 ?>
-<?php include('_footer.php'); ?>

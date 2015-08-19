@@ -16,6 +16,35 @@ class Appointment{
     public $code = "";
     public $points = "";
 
+    public function save(){
+        $db = db_connect();
+        if ($db){
+            try{
+                $stmt = $db->prepare("INSERT INTO cip_appointment
+                                      (time, homework_id, location_id, user_id, code)
+                                      VALUES
+                                      (:time, :homework_id, :location_id, :user_id, :code)");
+                $stmt->bindParam(':time', $this->time);
+                $stmt->bindParam(':homework_id', $this->homework_id);
+                $stmt->bindParam(':location_id', $this->location_id);
+                $stmt->bindParam(':user_id', $this->user_id);
+                $stmt->bindParam(':code', $this->code);
+
+                $stmt->execute();
+
+                $this->id = $db->lastInsertId();
+            }
+            catch (PDOException $e){
+                $db = null;
+                $this->id = -1;
+            }
+        }
+        else
+        {
+            $this->id = -1;		//db error
+        }
+
+    }
 
     public function get(){
         $db = db_connect();

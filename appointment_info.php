@@ -81,7 +81,66 @@ else if($_POST['action'] == 'Choose day'){
     }
 
 }
-else if($_POST[''])
+else if ($_POST['action'] == 'Choose timeslot'){
+    $appointmentController = new AppointmentController();
+    $homeworkController = new HomeworkController();
+    $lectureController = new LectureController();
+    $locationController = new LocationController();
+    $workingHours = new WorkingHoursController();
+
+    $availableTimeslots = array();
+
+    $homeworkInfo = $homeworkController->homeworkInfo($_POST['h']);
+
+    $lectureInfo = $lectureController->lectureInfo($homeworkInfo->lecture_id);
+
+    $locationInfo = $locationController->locationInfo($_POST['location_id']);
+
+    $workingHoursOnDay = $workingHours->getWorkingHoursOnLocationOnDay($_POST['location_id'], $_POST['day']);
+    foreach ($workingHoursOnDay as $key => $value){
+        $itertime = $value->open_time;
+        while (strtotime($itertime) < strtotime($value->close_time)){
+            if ($appointmentController->isTimeslotOpen($_POST['location_id'], $_POST['day'], date("H:i:s", strtotime('+20 minutes', strtotime($itertime))) )){
+                array_push($availableTimeslots, date("H:i:s", strtotime('+20 minutes', strtotime($itertime))));
+            }
+            if ($appointmentController->isTimeslotOpen($_POST['location_id'], $_POST['day'], date("H:i:s", strtotime('+40 minutes', strtotime($itertime))) )){
+                array_push($availableTimeslots, date("H:i:s", strtotime('+40 minutes', strtotime($itertime))));
+            }
+            $itertime = date ("H:i", strtotime('+60 minutes', strtotime($itertime)));
+        }
+    }
+}
+else if($_POST['action'] == 'Continue'){
+    $appointmentController = new AppointmentController();
+    $homeworkController = new HomeworkController();
+    $lectureController = new LectureController();
+    $locationController = new LocationController();
+    $workingHours = new WorkingHoursController();
+
+    $homeworkInfo = $homeworkController->homeworkInfo($_POST['h']);
+
+    $lectureInfo = $lectureController->lectureInfo($homeworkInfo->lecture_id);
+
+    $locationInfo = $locationController->locationInfo($_POST['location_id']);
+}
+else if($_POST['action'] == 'Confirm your appointment'){
+    $appointmentController = new AppointmentController();
+    $homeworkController = new HomeworkController();
+    $lectureController = new LectureController();
+    $locationController = new LocationController();
+    $workingHours = new WorkingHoursController();
+
+    $homeworkInfo = $homeworkController->homeworkInfo($_POST['h']);
+
+    $lectureInfo = $lectureController->lectureInfo($homeworkInfo->lecture_id);
+
+    $locationInfo = $locationController->locationInfo($_POST['location_id']);
+
+    //$result = $appointmentController->createAppointment();
+
+
+}
+
 
 //require_once('includes/user.php');
 //require_once('includes/lecture.php');

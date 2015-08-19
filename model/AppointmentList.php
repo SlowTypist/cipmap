@@ -11,11 +11,53 @@ include_once 'Appointment.php';
 class AppointmentList{
 
     public $list = array();
-    public $lecture_id = 0;
-    public $user_id = 0;
+    public $id = 0;
+    public $time = "";
+    public $homework_id = "";
+    public $location_id = "";
+    public $user_id = "";
     public $code = "";
+    public $points = "";
 
-    public function getAll(){
+    public function getAllFromLocationAndTime(){
+        $db = db_connect();
+        if ($db){
+            try{
+                $stmt = $db->prepare("SELECT A.id, A.time, A.homework_id, A.location_id, A.user_id, A.code,A.points
+                                      FROM cip_appointment A
+                                      WHERE location_id = :location_id
+                                      AND time = :time
+                                      ORDER BY id ASC");
+                $stmt->bindParam(':location_id', $this->location_id);
+                $stmt->bindParam(':time', $this->time);
+
+                $stmt->execute();
+
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                    $appointment = new Appointment();
+                    $appointment->id = $row['id'];
+                    $appointment->time = $row['time'];
+                    $appointment->homework_id = $row['homework_id'];
+                    $appointment->location_id = $row['location_id'];
+                    $appointment->user_id = $row['user_id'];
+                    $appointment->code = $row['code'];
+                    $appointment->points = $row['points'];
+                    array_push($this->list, $appointment);
+                }
+
+            }
+            catch (PDOException $e){
+                $this->homework_id = -1;		//db error
+            }
+        }
+        else{
+            $this->homework_id = -1;		//db error
+        }
+
+    }
+
+
+    public function getAllFromLectureFromUser(){
         $db = db_connect();
         if ($db){
             try{

@@ -13,12 +13,27 @@ require_once(dirname(__DIR__).'/model/User.php');
 
 class AppointmentController{
 
+    public function createAppointment($day, $time, $homework_id, $location_id, $user_id, $code = NULL){
+        $appointment = new Appointment();
+        $appointment->time = date ("Y-m-d H:i:s", strtotime($day." ".$time));
+        $appointment->homework_id;
+        $appointment->location_id;
+        $appointment->user_id;
+        if (!isset($code)){
+            $appointment->code = sha1(uniqid(mt_rand(), true)).strtotime($appointment->time);
+        }
+        else{
+            $appointment->code = $code;
+        }
+
+    }
+
     public function listAllFromLecture($lecture_id, $user_id){
         $appointmentList = new AppointmentList();
         $appointmentList->lecture_id = $lecture_id;
         $appointmentList->user_id = $user_id;
 
-        $appointmentList->getAll();
+        $appointmentList->getAllFromLectureFromUser();
 
         return $appointmentList->list;
 
@@ -33,6 +48,20 @@ class AppointmentController{
         $appointment->get();
 
         return $appointment;
+    }
+    public function isTimeslotOpen($location_id, $day,  $time){
+        $appointmentList = new AppointmentList();
+        $appointmentList->location_id = $location_id;
+        $appointmentList->time = $day." ".$time;
+
+        $appointmentList->getAllFromLocationAndTime();
+
+        if(empty($appointmentList->list)){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     public function getTeammates($code){
