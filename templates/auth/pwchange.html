@@ -1,0 +1,52 @@
+{% include 'header.html' %}
+<body>
+
+<div class="container">
+    <form role="form-horizontal"  method="post" action="pwchange.php" name="loginform">
+
+        <div class="form-group">
+            <label for="current_pw">Current password</label>
+            <input type="password" name="current_pw" class="form-control" autocomplete="off" required/>
+
+        </div>
+
+
+        <div class="form-group">
+            <label for="new_pw">New password</label>
+            <input type="password"  name="new_pw" class="form-control" autocomplete="off" required/>
+
+        </div>
+
+
+        <div class="form-group">
+            <label for="new_pw_repeat">Repeat new password</label>
+            <input type="password" name="new_pw_repeat" class="form-control" autocomplete="off" required/>
+
+        </div>
+
+
+
+
+
+        <input type="submit" name="action" value="Change password" class="btn btn-default" />
+    </form>
+
+    <br/>
+    {% if type == "error" %}
+        <div class="alert alert-danger" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            {{ message }}
+        </div>
+        {% elseif type == "success" %}
+        <div class="alert alert-success" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            {{ message }}
+        </div>
+    {% endif %}
+
+    <a href="home.php">Back to main page</a>
+</div>
+</body>
+</html>
