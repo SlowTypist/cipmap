@@ -1,4 +1,4 @@
-<?php
+    <?php
 require_once("./header.php");
 require_once("./controller/UserController.php");
 if ($_SESSION['loggedin'] == true){

@@ -1,0 +1,54 @@
+{% include 'header.html' %}
+<body>
+
+{% include 'nav.html' %}
+
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Lecture Details</h3>
+        </div>
+        <div class="panel-body">
+            <b>Lecture: </b> {{ lname }} </br>
+            <b> Teacher: </b> {{ lteacher }} </br>
+            <b>Maximum group size: </b> {{ lgs }} </br>
+            <b>Maximum points available:</b> {{ lpoints }}
+        </div>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Homework name</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Max Points</th>
+            <th>Download Task</th>
+            <th>Your Appointment</th>
+            <th>Your Points</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {%  for homework in lhw %}
+            <tr>
+                <td>{{ homework.name }}</td>
+                <td>{{ homework.start|date("d M Y") }}</td>
+                <td>{{ homework.end|date("d M Y") }}</td>
+                <td>{{ homework.max_points }}</td>
+                <td>
+                    {% if homework.link_task is empty %}
+                        -
+                    {% else %}
+                        <a href='download_task.php?id={{homework.id}}'>Download task</a>
+                    {% endif %}
+                </td>
+                <td>b</td>
+                <td>c</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
