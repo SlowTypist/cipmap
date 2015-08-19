@@ -43,8 +43,22 @@
                         <a href='download_task.php?id={{homework.id}}'>Download task</a>
                     {% endif %}
                 </td>
-                <td>b</td>
-                <td>c</td>
+                <td>
+                    {% if apss|length == 0 %}
+                        {% if homework.end >= 'now'|date("Y-m-d") %}
+                            <a href='appointment_info.php?h={{ homework.id }}'>Register</a>
+                        {% else %}
+                            Registration Closed
+                        {% endif %}
+                    {% else %}
+                        {% for appointment in apps %}
+                            {% if appointment.homework_id == homework.id %}
+                                <a href='appointment_info.php?id={{ appointment.id }}'>{{ appointment.time|date("D d M Y H:i") }}</a>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </td>
+                <td>{{ apoints }}</td>
             </tr>
         {% endfor %}
         </tbody>

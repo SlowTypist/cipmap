@@ -42,10 +42,14 @@ $template_variables["lpoints"] =  $allPoints;
 $appointmentController = new AppointmentController();
 $appointmentList = $appointmentController->listAllFromLecture($_GET['id'], $_SESSION['user']);
 
+$template_variables["apps"] = $appointmentList;
+
 $totalPoints = 0;
 foreach ($appointmentList as $key => $value){
     $totalPoints += $value->points;
 }
+
+$template_variables["apoints"] = $totalPoints;
 
 
 
