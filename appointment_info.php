@@ -81,6 +81,7 @@ else if($_POST['action'] == 'Choose day'){
     }
 
 }
+else if($_POST[''])
 
 //require_once('includes/user.php');
 //require_once('includes/lecture.php');

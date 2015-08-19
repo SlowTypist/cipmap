@@ -26,6 +26,9 @@ class UserController {
                 if ($user->active){
                     $_SESSION['loggedin'] = true;
                     $_SESSION['user'] = $user->id;
+                    $_SESSION['matrikelnr'] = $user->matrikelnr;
+                    $_SESSION['name'] = $user->name;
+                    $_SESSION['surname'] = $user->surname;
                     $_SESSION['role'] = $user->role;
                     $_SESSION['email'] = $user->email;
                     $_SESSION['LAST_ACTIVITY'] = time();
@@ -44,7 +47,7 @@ class UserController {
             $loginerror = "No such user";
         }
         else if ($user->id == -1){
-            $loginerror == "No such user";
+            $loginerror = "Database error";
         }
 
         return $loginerror;
@@ -215,11 +218,11 @@ class UserController {
             $result["message"] = "Account is not active";
         } else {
             if ($this->sendForgotEmail($user->id, $user->email, $user->pwreset_hash)){
-                $result["type"] = "error";
+                $result["type"] = "success";
                 $result["message"] = "Reset link send. Please check your e-mail";
             }
             else{
-                $result["type"] = "success";
+                $result["type"] = "error";
                 $result["message"] =  "E-mail wasn't sent. Please contact tutors";
             }
         }
