@@ -10,3 +10,8 @@
     text-shadow: 2px 4px 6px rgba(0,0,0,1), 0px -5px 35px rgba(255,255,255,0.7) !important;
 }
 
+.nav-menu {
+    float:left;
+    width: 300px;
+    margin-left:10px;
+}
