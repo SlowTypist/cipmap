@@ -44,7 +44,7 @@
                     {% endif %}
                 </td>
                 <td>
-                    {% if apss|length == 0 %}
+                    {% if apps|length == 0 %}
                         {% if homework.end >= 'now'|date("Y-m-d") %}
                             <a href='appointment_info.php?h={{ homework.id }}'>Register</a>
                         {% else %}
