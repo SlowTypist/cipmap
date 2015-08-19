@@ -23,7 +23,7 @@ if ($_SESSION['loggedin'] == true)
 	{
 		if (isset($_GET["h"]))
 		{
-			$appointment = new appointment();
+			$appointment = new old_appointment();
 			$homework = new homework();
 			$location = new location();
 			$appointmentinfo = $appointment->userHomeworkAppointment($_SESSION['user'], $_GET["h"]);

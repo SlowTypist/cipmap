@@ -29,7 +29,7 @@ if ($_SESSION['loggedin'] == true)
 			$homework = new homework();
 			$allhomeworks = $homework->listAllHomeworks($_GET["id"]);
 			$allPoints = $homework->allPoints($_GET["id"]);
-			$appointment = new appointment();
+			$appointment = new old_appointment();
 			$allAppointments = $appointment->allUserLectureAppointments($_SESSION["user"], $_GET["id"]);
 		}
 		else

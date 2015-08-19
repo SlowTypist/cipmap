@@ -1,6 +1,10 @@
 <?php
-require_once('includes/user.php');
-require_once('includes/lecture.php');
-include ("handlers/student1_handler.php");
+require_once("./includes/refresh_session.php");
+require_once("./header.php");
+require_once("./controller/LectureController.php");
+
+$lectureController = new LectureController();
+$allLectures = $lectureController->listAll();
+
 include("views/student1_view.php");
 ?> 

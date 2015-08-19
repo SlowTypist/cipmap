@@ -2,7 +2,7 @@
 include_once(dirname(__DIR__).'/config/config.php');
 include_once dirname(__FILE__).'/db.php';
 include_once(dirname(__DIR__).'/libraries/PHPMailer.php');
-class appointment
+class old_appointment
 {
 	public function isTimeslotOpen($location_id, $day, $time)
 	{

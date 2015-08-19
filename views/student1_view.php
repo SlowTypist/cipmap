@@ -1,9 +1,9 @@
 <?php include('_header.php'); ?>
-<b>Name:</b> <?php echo $userinfo['name']." ";echo $userinfo['surname']?>   <b>Matrikel-Nr.:</b> <?php echo $userinfo['matrikelnr'];?><br>
+<b>Logged in as <?php echo $_SESSION['email'];?></b><br>
 <b>Available lectures:</b><br>
 <?php
-foreach ($alllectures as $key => $value) {
-	echo "<a href=lecture_info.php?id=".$value['id'].">".$value['name']."</a><br>";
+foreach ($allLectures as $key => $value) {
+	echo "<a href=lecture_info.php?id=".$value->id.">".$value->name."</a><br>";
 }
 ?>
 <br>

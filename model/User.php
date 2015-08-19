@@ -138,7 +138,9 @@ class User{
 
                 $this->email = trim($this->email);
                 // preparing the query template
-                $stmt = $db->prepare("SELECT id,name,surname, matrikelnr, password, active,activation_hash, pwreset_hash, role FROM cip_user WHERE email= :email");
+                $stmt = $db->prepare("SELECT id,name,surname, matrikelnr, password, active,
+                                      activation_hash, pwreset_hash, role
+                                      FROM cip_user WHERE email= :email");
                 // setting variables
                 $stmt->bindParam(':email', $this->email);
                 $stmt->execute();

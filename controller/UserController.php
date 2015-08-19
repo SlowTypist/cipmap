@@ -7,7 +7,6 @@
  */
 
 include_once(dirname(__DIR__).'/config/config.php');
-include_once dirname(__DIR__).'/includes/db.php';
 require_once(dirname(__DIR__).'/model/User.php');
 include_once(dirname(__DIR__).'/libraries/PHPMailer.php');
 
@@ -302,65 +301,59 @@ class UserController {
         }
 
     }
-   public function changePassword($user_id, $cur_pw, $new_pw, $new_pw_repeat)
-            //1 success, 0 db problem, -1 wrong current password, -2 wrong repeat, -3 new password is empty -4 new password is too short
-        {
-            if ($new_pw != $new_pw_repeat)
-            {
-                return -2;
-            }
-            if (empty($new_pw))
-            {
-                return -3;
-            }
-            elseif (strlen($new_pw) < 6)
-            {
-                return -4;
-            }
+   public function changePassword(){
+       $result = array();
+       //validate data
+       if ($_POST['new_pw']!= $_POST['new_pw_repeat']){
 
-            $db = db_connect();
-            if ($db)
-            {
-                try
-                {
-                    $stmt = $db->prepare('SELECT email, password FROM cip_user WHERE id = :user_id');
-                    $stmt->bindParam(':user_id', $user_id);
-                    $stmt->execute();
-                    $fetchResult = $stmt->fetch(PDO::FETCH_NUM);
-                    var_dump($table_email);
-                    var_dump($table_pw);
-                    if ($fetchResult[1] != sha1($fetchResult[0].$cur_pw))
-                    {
-                        $db = 0;
-                        return -1;
-                    }
-                    else
-                    {
-                        $new_pw = sha1($fetchResult[0].$new_pw);
-                        $stmt = $db->prepare("UPDATE cip_user
-											  SET password = :new_pw
-											  WHERE id = :user_id");
-                        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
-                        $stmt->bindValue(':new_pw', $new_pw, PDO::PARAM_STR);
-                        $stmt->execute();
-                        if($stmt)
-                        {
-                            return 1;
+           $result["type"] = "error";
+           $result["message"] = "Passwords don't match";
 
-                        }
+       }
+       elseif (empty($_POST['new_pw'])){
 
-                    }
+           $result["type"] = "error";
+           $result["message"] = "Please enter a password";
 
-                }
-                catch (PDOException $e)
-                {
-                    $db = 0;
-                    return 0;
-                }
+       }
+       elseif (strlen($_POST['new_pw']) < 6){
+           $result["type"] = "error";
+           $result["message"] = "Password must be at least 6 characters long";
 
-            }
+       }
+       if(isset($result["type"])) {
+           return $result;
+       }
+       $user = new User();
+       $user->id = $_SESSION['user'];
+       $user->get();
 
-        }
+       if ($user->id == 0) {
+           $result["type"] = "error";
+           $result["message"] = "No such user (System error)";
+       }
+       elseif ($user->password != sha1($user->email.$_POST['current_pw'])){
+           $result["type"] = "error";
+           $result["message"] = "Wrong current password";
+       }
+
+       if(isset($result["type"])) {
+           return $result;
+       }
+
+       $user->password = sha1($user->email.$_POST['new_pw']);
+       $user->update();
+       if ($user->id != $_SESSION['user']){
+           $result["type"] = "error";
+           $result["message"] = "System error";
+       }
+       else{
+           $result["type"] = "success";
+           $result["message"] = "Password successfully changed";
+       }
+       return $result;
+
+   }
     public function getUserInformation($user_id){
     $db = db_connect();
     if ($db){
@@ -417,7 +410,6 @@ class UserController {
 
         }
         public function changeUserInformation($user_id, $email,  $name, $surname, $matrnr, $active, $role)
-            // 0 - db error// 1 - success
         {
             $db = db_connect();
             if ($db)
