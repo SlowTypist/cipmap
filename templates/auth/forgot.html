@@ -1,0 +1,36 @@
+{% include 'header.html' %}
+<body>
+
+<div class="container">
+    <form role="form-horizontal"  method="post" action="forgot.php" name="loginform">
+        <legend>Forgot password</legend>
+        <div class="form-group">
+
+            <label for="email">Email</label>
+            <input type="email" name="email" class="form-control" value="{{email}}"/>
+
+        </div>
+
+
+        <input type="submit" name="action" value="Send verification e-mail" class="btn btn-default" />
+    </form>
+
+    <br/>
+    {% if type == "error" %}
+        <div class="alert alert-danger" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            {{ message }}
+        </div>
+        {% elseif type == "success" %}
+        <div class="alert alert-success" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            {{ message }}
+        </div>
+    {% endif %}
+
+    <a href="index.php">Back to main page</a>
+</div>
+</body>
+</html>

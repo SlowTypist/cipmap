@@ -195,27 +195,36 @@ class UserController {
 
 
     }
+
     public function forgot(){
+
+        $result = array();
         $user = new User();
         $user->email = trim($_POST['email']);
 
         $user->getByEmail();
 
-        if($user->id == -1){
-            return "Database error";
+        if ($user->id == -1){
+            $result["type"] = "error";
+            $result["message"] = "Database error";
+        } else if ($user->id == 0){
+            $result["type"] = "error";
+            $result["message"] = "No such user";
+        } else if ($user->active == 0){
+            $result["type"] = "error";
+            $result["message"] = "Account is not active";
+        } else {
+            if ($this->sendForgotEmail($user->id, $user->email, $user->pwreset_hash)){
+                $result["type"] = "error";
+                $result["message"] = "Reset link send. Please check your e-mail";
+            }
+            else{
+                $result["type"] = "success";
+                $result["message"] =  "E-mail wasn't sent. Please contact tutors";
+            }
         }
-        if ($user->id == 0){
-            return "No such user";
-        }
-        if ($user->active == 0){
-            return "Account is not active";
-        }
-        if ($this->sendForgotEmail($user->id, $user->email, $user->pwreset_hash)){
-            return "Reset link send. Please check your e-mail";
-        }
-        else{
-            return "E-mail wasn't sent. Please contact tutors";
-        }
+
+        return $result;
 
     }
     public function sendForgotEmail($user_id, $email, $pwreset_hash)
